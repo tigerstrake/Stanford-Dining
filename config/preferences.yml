@@ -1,0 +1,377 @@
+# Stanford Dining Recommender — Dietary Preferences
+#
+# This file is the single source of truth for what gets recommended and penalized.
+# Both the deterministic scorer and the AI prompt are generated from it.
+#
+# To tune scoring: adjust 'score' values. Positive = bonus, negative = penalty.
+# To add/remove foods: edit 'keywords' lists. Matching is case-insensitive and
+# checks both the item name and the ingredient text.
+
+description: >
+  Optimize for health and ingredient quality. Prioritize whole foods,
+  high protein, vegetables, legumes, whole grains, fruit, nuts, yogurt,
+  minimally processed foods, and balanced meals. Avoid ultra-processed foods,
+  fried foods, sugary desserts, refined-carb-heavy meals, refined-carb-only
+  meals, and low-quality processed meats.
+
+notes:
+  - Used to be vegetarian but now eats meat for health reasons.
+  - Recommend meat only when minimally processed and whole — grilled chicken, turkey, lean beef, lamb, or similar.
+  - Do not recommend processed meat, breaded meat, nugget-style chicken, hot dogs, low-quality deli meats, or anything that feels like mystery meat.
+  - Do not recommend fish or seafood.
+  - Do not recommend plain or pure egg dishes such as scrambled eggs, boiled eggs, omelets, or egg-forward meals.
+  - Vegetarian options are welcome if they are nutritionally strong (tofu, lentils, beans, chickpeas, yogurt, etc.).
+
+scoring:
+  bonuses:
+    - category: minimally_processed_meat
+      score: 4.0
+      description: Whole, unprocessed meat with minimal preparation
+      keywords:
+        - grilled chicken
+        - roasted chicken
+        - chicken breast
+        - baked chicken
+        - turkey breast
+        - roasted turkey
+        - grilled turkey
+        - sirloin
+        - tenderloin
+        - flank steak
+        - grass-fed beef
+        - lean beef
+        - lamb
+        - bison
+        - venison
+
+    - category: legumes
+      score: 3.5
+      description: Beans, lentils, chickpeas, and other legumes — strong vegetarian protein
+      keywords:
+        - lentil
+        - chickpea
+        - black bean
+        - kidney bean
+        - pinto bean
+        - navy bean
+        - black eyed pea
+        - black-eyed pea
+        - split pea
+        - garbanzo
+        - white bean
+        - cannellini
+        - fava bean
+        - lima bean
+        - edamame
+
+    - category: vegetarian_protein
+      score: 3.0
+      description: Non-legume vegetarian protein sources
+      keywords:
+        - tofu
+        - tempeh
+        - seitan
+        - paneer
+        - cottage cheese
+        - greek yogurt
+
+    - category: vegetables
+      score: 2.5
+      description: Non-starchy vegetables
+      keywords:
+        - broccoli
+        - spinach
+        - kale
+        - arugula
+        - chard
+        - collard
+        - beet
+        - carrot
+        - zucchini
+        - squash
+        - asparagus
+        - cauliflower
+        - brussels sprout
+        - cabbage
+        - celery
+        - cucumber
+        - eggplant
+        - green bean
+        - bell pepper
+        - mushroom
+        - artichoke
+        - fennel
+        - bok choy
+        - rapini
+        - leek
+        - steamed vegetable
+        - roasted vegetable
+        - seasonal vegetable
+        - mixed vegetable
+        - vegetable board
+        - curried vegetable
+        - sauteed vegetable
+
+    - category: whole_grains
+      score: 2.0
+      description: Whole and minimally processed grains
+      keywords:
+        - brown rice
+        - wild rice
+        - quinoa
+        - farro
+        - barley
+        - bulgur
+        - whole wheat
+        - whole grain
+        - oat
+        - millet
+        - buckwheat
+        - amaranth
+        - teff
+        - freekeh
+        - spelt
+        - wheatberry
+
+    - category: fruit
+      score: 1.5
+      description: Fresh and whole fruit
+      keywords:
+        - apple
+        - banana
+        - orange
+        - berries
+        - blueberry
+        - strawberry
+        - raspberry
+        - blackberry
+        - mango
+        - pineapple
+        - melon
+        - peach
+        - plum
+        - pear
+        - grape
+        - kiwi
+        - citrus
+        - avocado
+        - pomegranate
+        - cherry
+        - papaya
+        - guava
+
+    - category: nuts_seeds
+      score: 1.5
+      description: Nuts and seeds
+      keywords:
+        - almond
+        - walnut
+        - cashew
+        - pecan
+        - pistachio
+        - peanut
+        - sunflower seed
+        - pumpkin seed
+        - chia seed
+        - flaxseed
+        - hemp seed
+        - tahini
+        - sesame
+        - nut butter
+
+    - category: yogurt
+      score: 1.5
+      description: Fermented dairy with probiotic and protein value
+      keywords:
+        - greek yogurt
+        - yogurt
+        - kefir
+
+    - category: healthy_fats
+      score: 1.0
+      description: Healthy unsaturated fat sources
+      keywords:
+        - olive oil
+        - avocado oil
+        - flaxseed oil
+
+    - category: healthy_soup
+      score: 0.5
+      description: Light broth or vegetable-based soups
+      keywords:
+        - broth
+        - minestrone
+        - lentil soup
+        - vegetable soup
+        - miso soup
+
+  penalties:
+    - category: fish_seafood
+      score: -6.0
+      description: >
+        Hard avoid — fish and seafood of all kinds.
+        Do not recommend even as a secondary option.
+      keywords:
+        - salmon
+        - tuna
+        - tilapia
+        - cod
+        - halibut
+        - trout
+        - mahi
+        - flounder
+        - bass
+        - snapper
+        - catfish
+        - shrimp
+        - crab
+        - lobster
+        - oyster
+        - clam
+        - scallop
+        - mussel
+        - squid
+        - calamari
+        - seafood
+        - fish
+        - anchovy
+        - sardine
+        - herring
+        - blackened salmon
+        - seared salmon
+
+    - category: ultra_processed_meat
+      score: -6.0
+      description: >
+        Hard avoid — cured, preserved, or heavily processed meats.
+        Includes hot dogs, sausage links, deli meats, and similar products.
+      keywords:
+        - hot dog
+        - sausage link
+        - pepperoni
+        - salami
+        - bologna
+        - spam
+        - bacon
+        - canadian bacon
+        - pastrami
+        - corned beef
+        - luncheon meat
+        - deli meat
+        - mystery meat
+
+    - category: breaded_processed_meat
+      score: -5.0
+      description: >
+        Hard avoid — breaded, nugget-style, or low-quality processed
+        chicken and meat products.
+      keywords:
+        - nugget
+        - chicken nugget
+        - chicken tender
+        - chicken finger
+        - chicken strip
+        - breaded chicken
+        - breaded fish
+        - popcorn chicken
+        - chicken patty
+        - meat lover
+
+    - category: pure_egg_dishes
+      score: -4.5
+      description: >
+        Hard avoid — dishes where egg is the primary or only protein.
+        Eggs as a minor ingredient in a composed dish are acceptable.
+      keywords:
+        - scrambled eggs
+        - scrambled egg
+        - fried egg
+        - over easy
+        - sunny side
+        - poached egg
+        - hard boiled egg
+        - soft boiled egg
+        - deviled egg
+        - omelette
+        - omelet
+        - frittata
+        - quiche
+        - egg casserole
+        - egg scramble
+
+    - category: fried_foods
+      score: -4.0
+      description: Deep-fried foods and high-fat fried preparations
+      keywords:
+        - fried chicken
+        - deep fried
+        - french fries
+        - tater tot
+        - onion ring
+        - fritter
+        - churro
+        - donut
+        - doughnut
+        - fried rice
+        - tempura
+
+    - category: sugary_desserts
+      score: -3.5
+      description: Desserts, sweets, and high-sugar items
+      keywords:
+        - cake
+        - cupcake
+        - cookie
+        - brownie
+        - muffin
+        - pastry
+        - pie
+        - ice cream
+        - gelato
+        - sorbet
+        - pudding
+        - candy
+        - chocolate sauce
+        - caramel
+        - syrup
+        - waffle
+        - pancake
+        - crepe
+        - danish
+        - croissant
+        - scone
+        - tart
+        - dessert
+        - cobbler
+        - cheesecake
+
+    - category: low_quality_food
+      score: -3.0
+      description: Ultra-processed dishes and junk food
+      keywords:
+        - mac and cheese
+        - macaroni and cheese
+        - velveeta
+        - alfredo
+        - nacho
+        - chips
+        - cheese sauce
+        - queso
+
+    - category: refined_carbs
+      score: -2.0
+      description: White refined starches with little nutritional value
+      keywords:
+        - white bread
+        - white rice
+        - white pasta
+        - bagel
+        - baguette
+        - grits
+        - penne pasta
+        - spaghetti
+        - macaroni
+        - linguine
+        - fettuccine
+        - ramen
+        - instant noodle

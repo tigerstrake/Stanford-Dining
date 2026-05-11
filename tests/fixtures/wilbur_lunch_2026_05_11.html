@@ -1,0 +1,1779 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>
+	Dining Hall Menu | Stanford University
+</title><script src="/DiningHallMenu/bundles/modernizr?v=wBEWDufH_8Md-Pbioxomt90vm6tJN2Pyy9u9zHtWsPo1"></script>
+<link href="/DiningHallMenu/Content/css?v=DIB10HVja-UqJDH20o-ZUZh9jQoaARZZnfPcgfI8K8E1" rel="stylesheet"/>
+<link href="StylesForms.css" type="text/css" rel="stylesheet" /><link href="images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <style>
+        .containerSite {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+
+        .clsHRLineSite {
+            margin-top: 0px;
+            border-color: #8C1515;
+            border-width: 2px;
+        }
+
+        .clsApplicationTitle {
+            text-align: right;
+            vertical-align: middle;
+            color: #8C1515;
+            font-size: 22px;
+            font-family: Stanford !important;
+            white-space: nowrap;
+        }
+        .clsApplicationTitle_Center{
+            text-align: center;
+            vertical-align: middle;
+            color: #8C1515;
+            font-size: 22px;
+            font-family: Stanford !important;
+            white-space: nowrap;
+        }
+
+        .clsHeaderTitle {
+            text-align: right;
+            vertical-align: middle;
+            color: #8C1515;
+            font-size: 28px;
+            font-family: Stanford !important;
+        }
+        .clsHeaderTitle_Center {
+            text-align: center;
+            vertical-align: middle;
+            color: #8C1515;
+            font-size: 28px;
+            font-family: Stanford !important;
+        }
+
+        .clsHeaderTitle_Name {
+            text-align: right;
+            vertical-align: middle;
+            color: #8C1515;
+            font-size: 20px;
+            font-family: Stanford !important;
+        }
+
+        .clsLogo {
+            padding-top: 10px;
+            padding-bottom: 5px;
+            width: 200px;
+        }
+    </style>
+</head>
+<body style="padding-top: 0; width: 100% !important">
+    <form method="post" action="./Menu.aspx" id="ctl01" autocomplete="off">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="S0Z2n3SkhR+5cTjl5d7AbewK5k+RP00/yX5g+WunbDpbF+s6Gwjt4R1KcAp0Bqv+7cVz6QhTVgUuNST2JzVy6047W4S+gBK2UYlCelKmYaWeOh6st1JxHAWXgNpfuXxAZoyCY6q5ENh5AIraPxvCGk+XAv8YZbJpicoYjJB3OY951mNOifbL4TrYM2b+a3+GU92nhdRq0g/+fyeIEeAKb9cI5g7bQqo0tPRTa4n34Xwv0Ck1FKIF9Ws8aZlsFOM32OyNeQDFFhSFp+6slja5U56gkcvxJ7rg0giXbOkb/NZfyEwbaFeTMDHX7/tyj2f8MtL8GrJzGvnddp3AD72KAQhfJVXqdqvCuKn+U5QGFq7LF/TkrogyQEYk6ttiIiL+39ivMgNycYGxx3MFGAzz/gK3iXGCphYChd4CZtv7pq1VPYzbyv1Sw2Umv8aaS+qQPO6Gr8PhWpsgjCYuZo+ISXDEymX8TaY+vm0kOutE7qd3QHKXusyyTUIjUWigm5W72RCSv3fj23iXN8nPM6c2WLasZPV9jMwooMz5ecgl89G9fGhATT8kSlUYet8CTDt2DcJ4n/Y2BDuBFIxAKGIXj/ydpxVLCzkCJsDmBN7D+RhtHzHVjxsji11fEjhn8GVp6Zk7Ulllh10BZoXr47U/iOoXcfuUN4nrI+hJhTvRAsHKaJT8kWopwWq5s9ZLaxZpoDYKDmS2ox4ur/wXvp53zeuhUzML4HNvfG+aSEl/OYhnygKO6qX44G+plYHOY1Jtj3XnorwRWNdKCf7nGGsHAl/2M6/DxqLlk5ee3O8PAdQvv7MISv/QotIewdxRot98ak9N/0MmBG/o8upSQgils+JxJXnWTSeie/YYx+ws5y5r0TQ1plD0U1uyo/9wIHilEoZN9rxbCCxDEc/k1qYZuNDMS5drDlGNnqHH706Xl0v3AM9yaseot7QQVV4Pt04rAgQspeh5OA6Il3rpQZ+Zz5TSgNLlTY9JRI64H7IVMefAdv4eJ1peA7akbE2oSDmhz8qjMzxs8qupsUnJWMiu6CJFA1NMBydNHLym8h2zK4KgNtu3KERC/tA5v49z+q+O9JuF8hz4AGniMnC8zXPE1YV+rFi9SCX8K4TfQmhUMgWw39w5MQJZVW80Rp6xi5D6OcXk7K2dcfuCGV+5nw652S05OgiwoZTlaGyOuZPKjSoyl7rroNfd4ztQKDEeNtl31vBRLs1/ZfiXb7E6YrFyx5oTuwxk3GsY7s6gzp7ZPNcH8ssqJxaTRhVTP78GGuInMqvRxBirFnGLu79wdfmypg==" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['ctl01'];
+if (!theForm) {
+    theForm = document.ctl01;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+
+<script src="/DiningHallMenu/bundles/MsAjaxJs?v=c42ygB2U07n37m_Sfa8ZbLGVu4Rr2gsBo7MvUEnJeZ81" type="text/javascript"></script>
+<script src="Scripts/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
+<script src="Scripts/respond.min.js" type="text/javascript"></script>
+<script src="/DiningHallMenu/bundles/WebFormsJs?v=AAyiAYwMfvmwjNSBfIMrBAqfU5exDukMVhrRuZ-PDU01" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="5ABBD323" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="bRs0rf7ve3UG4fzschdpnMwDoCfDXPcA1DJqQ1LQUkLbZW9bewiJmf2UPI8MDL4wMCvc/ZAQGVCe5tlG6PEijoCuTtyVzWH3Et84Z4jnDEOR0vo25bqJYfhpfg2Zq5yRdpUvMllu4H3+uMIqHubOYXtGvClWe7dpqxrAeD7lIeCi6ghJWYZioknzVja9NHRg+TjaMHlTvVIOlclgGt2mG/RK4QWv9vMS+tk6+4fB3UU1W5BwjYIv7JDg4LHTISxk/QLSVdMlacaTY31eFRmw0UoIzTj7ralgdxUGmaDMDj/yMwGks/NZ2qZrQCJiiXO4y1hA9zqeXkXT63jsCKSOZlgeFRR9kE6P98srGG/ZfbAy4uE3u/foi5Xs8RUhmeKLAiTkcD2IyNwF/hBfg12QdUYUdJg/N17NkqvZ2ECIWYtuL2DLqtwrz+gWbyK6vjjfmyuCIFJ39pNDvExI9XlRepOcnkqVDXwY6vZPlBOl/051V0tPF1Cln70DnL/h//HQ387mS5sVHnDzaW7YXboOjd6jlEeFVtbGKU9mQkBVDbAEmKxzPVFHbL4OrzDfLAADm5EsbomLtSezL1czWYfHDLRFuMpGxgZtdyDX8DfHdfHBc//qCwE/R83KljgP7wTsqHA2ezRFwODSp6o79hP2pwq4GZeF3FgUcEjYnCYUmcU=" />
+</div>
+        <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ctl09', 'ctl01', [], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+
+        <div class="navbar-collapse collapse container clsheadersection noprint" style="width: 100% !important; background-color: white !important; padding-left: 0px !important">
+            <table border="0" style="width: 100%">
+                <tr>
+                    <td class="navbar-collapse collapse">
+                        <a href="https://rde.stanford.edu">
+                            <img typeof="foaf:Image" src="RDEHeader/RDElogo.png" alt="Stanford R&amp;amp;DE" class="clsLogo">
+                        </a></td>
+                    <td class="clsApplicationTitle" style="padding-right: 20px;">
+                        <h1 class="clsHeaderTitle">Dining Hall Menu</h1>
+                        
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="navbar-toggle clsheadersection noprint" style="width: 100% !important; background-color: white !important; padding-left: 0px !important">
+            <table border="0" style="width: 100%">
+                <tr>
+                    <td class="clsApplicationTitle_Center">
+                        <h1 class="clsHeaderTitle">Dining Hall Menu</h1>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr class="clsStanfordRed clsHRLineSite noprint" />
+
+        <div class="container body-content" style="padding-left: 18px">
+            
+
+    <style>
+        .clsLabel_Icons{
+            font-size: 18px;
+        }
+        .clsFilterField {
+            margin-top: 10px;
+        }
+
+        .clsLabel_IconImage {
+            width: 35px;
+        }
+
+        .clsSectionName {
+            font-weight: bold;
+        }
+
+        .clsLabel_Name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .clsMindful {
+            font-weight: bold;
+            font-size: 18px;
+            color: purple;
+        }
+
+        .clsMindfulfooter {
+            font-size: 18px;
+            color: purple;
+        }
+
+        .clsSharedFacility {
+            font-size: 18px;
+        }
+
+        .clsTraceAllergen {
+            color: #820000;
+            font-size: 18px;
+        }
+
+        .clsLabel_Description {
+            font-size: 18px;
+        }
+
+        .clsLabel_Ingredients {
+            font-style: italic;
+            font-size: 18px;
+        }
+
+        .clsLabel_Allergens {
+            color: #820000;
+            font-size: 18px;
+        }
+        .clsLabel_TraceAllergens {
+            color: #820000;
+            font-size: 18px;
+            font-style:italic;
+        }
+
+        table.clsCheckboxList input {
+            float: left;
+            margin-left: 5px;
+        }
+
+        table.clsCheckboxList label {
+            font-size: 14px;
+            white-space: nowrap;
+        }
+
+        .label {
+            padding-left: 5px !important;
+        }
+
+        .CLScheckbox {
+            white-space: nowrap;
+            margin-right: 10px;
+            font-size:18px;
+        }
+
+        .clsMenuHeader {
+            font-size: 20px;
+            color: #820000;
+        }
+
+        .clsFeedbackPrompt {
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .clsFeedbackIcons {
+            text-align: center;
+        }
+
+        .clsFeddbackIconImage {
+            width: 25px;
+        }
+
+        .customCheckboxFocus input[type="checkbox"]:focus + label {
+            outline: 1px solid #820000; 
+            padding:2px 2px 2px 2px;
+        }
+
+
+        @media print {
+            .noprint {
+                display: none;
+            }
+        }
+    </style>
+<br><br>
+    <div class="row noprint">
+
+        <div class="clsCol col-sm-2 clsFilterField" style="min-width: 330px;">
+            <label for="MainContent_lstLocations" id="MainContent_Label3" class="label" style="font-size:18px;">Dining Hall:</label><br />
+            <select name="ctl00$MainContent$lstLocations" id="MainContent_lstLocations" class="dropdownclass" style="font-size:18px;">
+	<option value=""></option>
+	<option value="Arrillaga">Arrillaga Family Dining Commons</option>
+	<option value="Branner">Branner Dining</option>
+	<option value="EVGR">EVGR Dining</option>
+	<option value="FlorenceMoore">Florence Moore Dining</option>
+	<option value="GerhardCasper">Gerhard Casper Dining</option>
+	<option value="Lakeside">Lakeside Dining</option>
+	<option value="Ricker">Ricker Dining</option>
+	<option value="Stern">Stern Dining</option>
+	<option selected="selected" value="Wilbur">Wilbur Dining</option>
+
+</select>
+        </div>
+
+        <div class="clsCol col-sm-1 clsFilterField" style="min-width: 250px;">
+            <label for="MainContent_lstDay" id="MainContent_Label1" class="label" style="font-size:18px;">Day:</label><br />
+            <select name="ctl00$MainContent$lstDay" id="MainContent_lstDay" class="dropdownclass" style="font-size:18px;">
+	<option value=""></option>
+	<option value="5/10/2026">5/10/2026 - Sunday</option>
+	<option selected="selected" value="5/11/2026">5/11/2026 - Monday</option>
+	<option value="5/12/2026">5/12/2026 - Tuesday</option>
+	<option value="5/13/2026">5/13/2026 - Wednesday</option>
+	<option value="5/14/2026">5/14/2026 - Thursday</option>
+	<option value="5/15/2026">5/15/2026 - Friday</option>
+	<option value="5/16/2026">5/16/2026 - Saturday</option>
+
+</select>
+        </div>
+
+        <div class="clsCol col-sm-1 clsFilterField" style="min-width: 130px;">
+            <label for="MainContent_lstMealType" id="MainContent_Label4" class="label" style="font-size:18px;">Meal:</label><br />
+            <select name="ctl00$MainContent$lstMealType" id="MainContent_lstMealType" class="dropdownclass" style="font-size:18px;">
+	<option value=""></option>
+	<option value="Breakfast">Breakfast</option>
+	<option selected="selected" value="Lunch">Lunch</option>
+	<option value="Dinner">Dinner</option>
+	<option value="Brunch">Brunch</option>
+
+</select>
+        </div>
+
+        <div class="clsCol col-sm-1 clsFilterField hiddenClass">
+            <br />
+            <input type="submit" name="ctl00$MainContent$btnRefresh" value="Refresh" id="MainContent_btnRefresh" class="clsButtons btn btn-primary btn-sm" />
+        </div>
+    </div>
+    <div class="row noprint">
+        <div class="clsCol col-sm-9 clsFilterField">
+            <span id="MainContent_Label2" class="label" style="font-size:18px;">Filters:</span><br />
+            <span class="customCheckboxFocus CLScheckbox"><input id="MainContent_chkGF" type="checkbox" name="ctl00$MainContent$chkGF" /><label for="MainContent_chkGF">Gluten-Free</label></span> 
+            <span class="customCheckboxFocus CLScheckbox"><input id="MainContent_chkV" type="checkbox" name="ctl00$MainContent$chkV" /><label for="MainContent_chkV">Vegetarian</label></span> 
+            <span class="customCheckboxFocus CLScheckbox"><input id="MainContent_chkVGN" type="checkbox" name="ctl00$MainContent$chkVGN" /><label for="MainContent_chkVGN">Vegan</label></span> 
+             
+             
+        </div> 
+    </div>
+    <br class="noprint" />
+
+    
+    <div class="row">
+        <div class="clsCol col-sm-9">
+            <h2 class="clsMenuHeader">Monday 5/11/2026<br />
+            Lunch at Wilbur Dining</h2>
+        </div>
+        <div class="clsCol col-sm-2">
+            <span class="clsFeedbackPrompt noprint hiddenClass">Provide Feedback</span>
+        </div>
+    </div>
+
+    <ul style="list-style-type: none;">
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsHALAL_Row clsDietCombo_GF">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Blackened Salmon</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_5349854" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_5349854" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_5349854" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> salmon, canola/ olive oil blend, cajun spice (garlic, oregano, cayenne pepper, chilli pepper, salt, paprika, onion, belll peppers), salt, thyme, salt, black pepper</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> FISH</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Cajun Tofu</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_3878294-1" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_3878294-1" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_3878294-1" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> tofu, tomato sauce, cayenne pepper, allspice, nutmeg, ancho chili pepper, cinnamon, garlic powder, onion powder, salt, pepper</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> SOY</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Seasonal Steamed Vegetables</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_5561366" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_5561366" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_5561366" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> seasonal vegetables, salt</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Seasonal Vegetable Board</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_4503514" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_4503514" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_4503514" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> artichokes, asparagus, green beans, beets, bok choy, broccoli, broccolini, brussels sprouts, carrots, cauliflower, mushrooms, okra, peas, bell peppers, chile peppers, potatoes, squash, sunchokes, sweet potatoes, tomatillos, or tomatoes, fresh herbs (chives, cilantro, dill, oregano, parsley, rosemary, sage, salt tarragon, or thyme), salt</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Lemony Garlic Green Beans</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_LemonGarlicBeans1" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_LemonGarlicBeans1" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_LemonGarlicBeans1" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> green beans, garlic, lemon juice, lemon zest, canola/olive oil blend, salt, pepper</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Collard Greens</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_3365370" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_3365370" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_3365370" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> collard greens, mustard greens, kale, hot sauce (cayenne peppers, distilled vinegar, salt, xanthan gum), canola/olive oil blend, garlic, onions, salt, pepper</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsVGN_Row clsHALAL_Row clsDietCombo_VGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Black Eyed Peas</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_4898351" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_4898351" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_4898351" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> black eyed peas, canola/olive oil blend, onions</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Dirty Rice</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_5581842" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_5581842" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_5581842" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> rice, vegetable soup base (contains carrots), onion, celery, canola/olive oil blend, oregano, parsley, sage, thyme, bay leaf, garlic, cayenne pepper, salt, pepper</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsV_Row clsHALAL_Row clsDietCombo_GFV">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Cheesy Grits</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_5053921" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_5053921" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_5053921" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> grits, cheddar cheese, parmesan cheese, cream, monterey jack cheese, unsalted butter, white pepper, salt</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> MILK</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/V2.png" alt="Vegetarian" title="Vegetarian"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Burger Bar</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_5964436" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_5964436" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_5964436" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Grilled Chicken</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_520454-02" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_520454-02" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_520454-02" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> chicken, canola/olive oil blend, salt, pepper</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> COCONUT, EGG, FISH, MILK, PEANUTS, SESAME, SHELLFISH, SOY, TREENUTS, WHEAT</span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsHALAL_Row clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Grilled Vegan/Vegetarian</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_13468741" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_13468741" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_13468741" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> chef's choice grilled vegan OR vegetarian option</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> COCONUT, EGG, FISH, MILK, PEANUTS, SESAME, SHELLFISH, SOY, TREENUTS, WHEAT</span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsV_Row clsHALAL_Row clsDietCombo_V">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Handmade Pizza</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_afdcpizza2" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_afdcpizza2" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_afdcpizza2" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> wheat flour, yeast, sugar, olive oil, mozzarella cheese, marinara sauce</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> MILK, WHEAT</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/V2.png" alt="Vegetarian" title="Vegetarian"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Panini Station</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_4532805" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_4532805" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_4532805" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> telera roll, chipotle aioli (soybean oil, eggs, vinegar, egg yolks, lemon juice concentrate, salt, sugar, dried onions, dried garlic, paprika, natural flavor, calcium disodium edta, tomato paste, dried chipotle peppers, distilled vinegar, corn oil, salt, corn starch, onion powder, garlic powder, spices, Lemon juice, garlic, sherry vinegar, red wine vinegar), beef pork salami, cheddar cheese, provolone cheese, vegan pesto sauce, tomatoes, arugula, sundried tomato pesto sauce</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> EGG, SOY, WHEAT</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> COCONUT, MILK, TREENUTS</span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Soup of the Day</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_SoupoftheDay" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_SoupoftheDay" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_SoupoftheDay" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> chef's choice soup of the day</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsHALAL_Row clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Composed Salad</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_123116546" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_123116546" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_123116546" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> chef's choice composed salad</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsDietCombo_">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Performance Bar</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_4992007" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_4992007" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_4992007" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> Seasonal Assortment of Fresh Vegetables, Salads, Beans, Whole Grains, Hard Boiled Eggs, Baked Chicken, Tofu, Hummus, Spinach</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"></span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Craveable Grains</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_CraveableGrains1" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_CraveableGrains1" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_CraveableGrains1" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> ** No Alliums: this includes garlic, onion, shallots, leeks, chives, scallions/ green onions, and any similar wild varieties, such as ramps. ** No Root vegetables/Tubers: this includes potatoes of any variety, beets, carrots, radishes, turnips, ginger, and fresh turmeric root. ** No Mushrooms/Fungi of any kind.</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Flavor Forward Legumes</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_FlavForLegumes1" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_FlavForLegumes1" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_FlavForLegumes1" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> ** No Alliums: this includes garlic, onion, shallots, leeks, chives, scallions/ green onions, and any similar wild varieties, such as ramps. ** No Root vegetables/Tubers: this includes potatoes of any variety, beets, carrots, radishes, turnips, ginger, and fresh turmeric root. ** No Mushrooms/Fungi of any kind.</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsV_Row clsHALAL_Row clsDietCombo_V">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Marinara Cheese Ravioli</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_3581918" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_3581918" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_3581918" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> ravioli, marinara sauce, parmesan cheese</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> EGG, MILK, SOY, WHEAT</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/V2.png" alt="Vegetarian" title="Vegetarian"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsV_Row clsHALAL_Row clsDietCombo_GFV">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Pesto Sauce</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_6128910" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_6128910" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_6128910" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> basil, canola oil, parmesan cheese (milk, bacterial culture, salt, microbial enzymes, extra virgin olive oil, garlic, salt, lemon juice concentrate, natural flavor, ascorbic acid, xanthan gum, soy lecithin, chamomile extract, rosemary extract)</span>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> MILK, SOY</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/V2.png" alt="Vegetarian" title="Vegetarian"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        <li style="margin-left:-20px;" class="clsMenuItem clsGF_Row clsVGN_Row clsHALAL_Row clsDietCombo_GFVGN">
+    <div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <h3 class="clsLabel_Name">Penne Pasta (Gluten-Free)</h3><span class="clsMindful"></span>
+            </div>
+            <div class="clsCol col-sm-1 clsFeedbackIcons hiddenClass noprint">
+                <span id="idFeedback_3189216" class="hiddenClass"></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageDOWN" id="idFeedback_thumpdown_3189216" src="images/thumpdown.gif" /></span>
+                <span style="display: inline-block; min-width: 25px;">
+                    <img class="clsFeddbackIconImage clsFeddbackIconImageUP" id="idFeedback_thumpup_3189216" src="images/thumpup.gif" /></span>
+            </div>
+        </div>
+        <div class="row hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Description"></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Ingredients"><span class="clsSectionName">Ingredients:</span> brown rice, rice bran, water</span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Allergens"><span class="clsSectionNameAllegens">Allergens:</span> </span>
+            </div>
+        </div>
+        <div class="row  hiddenClass">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_TraceAllergens"><span class="clsSectionNameAllegens">Made on shared equipment with </span> </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="clsCol col-sm-9">
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/GF2.png" alt="Gluten Free" title="Gluten Free"> </span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/VGN2.png" alt="Vegan" title="Vegan"> </span>
+                <span class="clsLabel_Icons"></span>
+                <span class="clsLabel_Icons"><img class="clsLabel_IconImage" src="images/icons/H2.png" alt="Halal" title="Halal"> </span>
+            </div>
+        </div>
+        <br />
+    </div>
+        </li>
+    
+        </ul>
+    
+
+
+    <div>
+        <br />
+        <span>Disclaimer: The ingredient and allergen information on this page are subject to change without notification. 
+            While we take many precautions to correctly identify ingredients and prevent cross-contact with food allergens, 
+            we are unable to guarantee the absence of potential food allergens in our food or facilities.
+        </span>
+    </div>
+
+    <script>
+
+        var bGF = false;
+        var bKOSHER = false;
+        var bHalal = false
+        var bV = false;
+        var bVGN = false;
+        var bSubmitFeedbackVisible = false;
+
+        $(document).ready(function () {
+
+            $(function () {
+                $(".dateTextBox").datepicker({
+                    showOn: "both",
+                    buttonImage: "images/calendarred.gif",
+                    buttonImageOnly: true,
+                    buttonText: "Select date",
+                    firstDay: 1,
+                    minDate: 0,
+                    maxDate: 7,
+                    constrainInput: true
+
+
+                });
+            });
+
+
+            $(".clsFeedbackPrompt").click(function () {
+                bSubmitFeedbackVisible = !bSubmitFeedbackVisible;
+                if (bSubmitFeedbackVisible) {
+                    $(".clsFeedbackIcons").show();
+                } else {
+                    $(".clsFeedbackIcons").hide();
+                }
+
+            });
+
+            $(".clsFeddbackIconImageUP").click(function () {
+                var thisID = this.id.replace("idFeedback_thumpup_", "");
+                var otherID = "idFeedback_thumpdown_" + thisID;
+                var currentVal = $("#idFeedback_" + thisID).html();
+
+                if (currentVal == "") {
+                    $("#idFeedback_" + thisID).html("UP");
+                    $("#" + otherID).hide();
+                } else {
+                    $("#idFeedback_" + thisID).html("");
+                    $("#" + otherID).show();
+                }
+
+            });
+            $(".clsFeddbackIconImageDOWN").click(function () {
+                var thisID = this.id.replace("idFeedback_thumpdown_", "");
+                var otherID = "idFeedback_thumpup_" + thisID;
+                var currentVal = $("#idFeedback_" + thisID).html();
+
+                if (currentVal == "") {
+                    $("#idFeedback_" + thisID).html("DOWN");
+                    $("#" + otherID).hide();
+                } else {
+                    $("#" + otherID).show();
+                }
+
+            });
+
+            
+            
+            
+            
+            
+            
+
+
+            $("#MainContent_chkGF").change(function () {
+                bGF = !bGF;
+
+
+
+                ApplyFilter();
+            });
+            $("#MainContent_chkKOSHER").change(function () {
+                bKOSHER = !bKOSHER;
+
+
+
+                ApplyFilter();
+            });
+            $("#MainContent_chkHalal").change(function () {
+                bHalal = !bHalal;
+
+
+
+                ApplyFilter();
+            });
+            $("#MainContent_chkV").change(function () {
+                bV = !bV;
+
+                if (bVGN && bV) {
+                    bVGN = false;
+                    $("#MainContent_chkVGN").prop('checked', false);
+
+                }
+
+
+
+                ApplyFilter();
+            });
+            $("#MainContent_chkVGN").change(function () {
+                bVGN = !bVGN;
+
+                if (bVGN && bV) {
+                    bV = false;
+                    $("#MainContent_chkV").prop('checked', false);
+
+                }
+
+
+
+                ApplyFilter();
+            });
+
+            $("#MainContent_lstDay").change(function () {
+                isOptionsReady("lstDay")
+                //$("#MainContent_lstMealType").focus();
+            });
+
+            $("#MainContent_lstMealType").change(function () {
+                isOptionsReady("lstMealType")
+                //$("#MainContent_lstMealType").focus();
+            });
+            $("#MainContent_lstLocations").change(function () {
+                isOptionsReady("lstLocations")
+                //$("#MainContent_lstDay").focus();
+            });
+
+            function ApplyFilter_Separate_V_VGN() {
+
+                var bGF_F = bGF;
+                var bV_F = bV;
+                var bVGN_F = bVGN;
+                var bKOSHER_F = bKOSHER;
+                var bHalal_F = bHalal;
+
+                if (bVGN_F && bV_F) {
+                    bV_F = false;
+                    //$("#MainContent_chkV").prop('checked', false);
+                }
+
+                if (bHalal_F || bKOSHER_F) {
+                    bV_F = false;
+                    bGF_F = false;
+                    bVGN_F = false;
+
+                    bV = false;
+                    bGF = false;
+                    bVGN = false;
+
+                    $("#MainContent_chkV").prop('checked', false);
+                    $("#MainContent_chkGF").prop('checked', false);
+                    $("#MainContent_chkVGN").prop('checked', false);
+                }
+
+                if (bHalal_F) {
+                    bKOSHER_F = false;
+                    bKOSHER = false;
+
+                    $("#MainContent_chkKOSHER").prop('checked', false);
+                }
+                if (bKOSHER_F) {
+                    bHalal_F = false;
+                    bHalal = false;
+
+                    $("#MainContent_chkHalal").prop('checked', false);
+                }
+
+                var sDietCombo1 = "";
+                var sDietCombo2 = "";
+                var iFilterCount = 0;
+                if (bGF_F) {
+                    sDietCombo1 += "GF";
+                    iFilterCount += 1;
+                }
+                if (bV_F) {
+                    sDietCombo2 = sDietCombo1 + "VGN";
+
+                    sDietCombo1 += "V";
+                    iFilterCount += 1;
+                }
+                if (bVGN_F) {
+                    if (!bV_F) sDietCombo1 += "VGN";
+                    iFilterCount += 1;
+                }
+
+                //alert(iFilterCount + "  1:" + sDietCombo1 + "  2:" + sDietCombo2);
+
+                if (bGF_F || bV_F || bVGN_F || bKOSHER_F || bHalal_F) {
+                    $(".clsMenuItem").hide();
+
+                    if (iFilterCount > 1) {
+                        $(".clsDietCombo_" + sDietCombo1).show();
+                        if (sDietCombo2 != "") $(".clsDietCombo_" + sDietCombo2).show();
+                    }
+
+                    if (iFilterCount == 1) {
+                        if (bGF_F) {
+                            $(".clsGF_Row").show();
+                        }
+                        if (bKOSHER_F) {
+                            $(".clsKOSHER_Row").show();
+                        }
+                        if (bHalal_F) {
+                            $(".clsHALAL_Row").show();
+                        }
+                        if (bV_F) {
+                            $(".clsV_Row").show();
+                            $(".clsVGN_Row").show();
+                        }
+                        if (bVGN_F) {
+                            $(".clsVGN_Row").show();
+                        }
+                    }
+
+                    if (bKOSHER_F) {
+                        $(".clsKOSHER_Row").show();
+                    }
+                    if (bHalal_F) {
+                        $(".clsHALAL_Row").show();
+                    }
+
+
+                } else {
+                    $(".clsMenuItem").show();
+                }
+
+            }
+
+            function ApplyFilter_Combine_V_VGN() {
+
+                var bGF_F = bGF;
+                var bV_F = bV;
+                var bVGN_F = bVGN;
+                var bKOSHER_F = bKOSHER;
+                var bHalal_F = bHalal;
+
+                //if (bVGN_F && bV_F) {
+                //    bV_F = false;
+                //    //$("#MainContent_chkV").prop('checked', false);
+                //}
+
+                var sDietCombo1 = "";
+                var sDietCombo2 = "";
+                var sDietCombo3 = "";
+                var iFilterCount = 0;
+                if (bGF_F) {
+                    sDietCombo1 += "GF";
+                    iFilterCount += 1;
+                }
+                if (bV_F) {
+                    sDietCombo2 = sDietCombo1 + "V";
+
+                    sDietCombo1 += "V";
+                    iFilterCount += 1;
+                }
+                if (bVGN_F) {
+                    if (!bV_F) sDietCombo1 += "VGN";
+                    if (bV_F) sDietCombo3 = sDietCombo1 + "VGN";
+                    iFilterCount += 1;
+                }
+
+                sDietCombo2 = "";
+                sDietCombo3 = "";
+                if (bGF_F && bV_F) {
+                    sDietCombo2 = "GF" + "V";
+                }
+                if (bGF_F && bVGN_F) {
+                    sDietCombo3 = "GF" + "VGN";
+                }
+
+                //alert(iFilterCount + "  1:" + sDietCombo1 + "  2:" + sDietCombo2 + "  3:" + sDietCombo3);
+
+                if (bGF_F || bV_F || bVGN_F || bKOSHER_F || bHalal_F) {
+                    $(".clsMenuItem").hide();
+
+                    if (iFilterCount > 1) {
+                        $(".clsDietCombo_" + sDietCombo1).show();
+                        if (sDietCombo2 != "") $(".clsDietCombo_" + sDietCombo2).show();
+                        if (sDietCombo3 != "") $(".clsDietCombo_" + sDietCombo3).show();
+                    }
+
+
+                    if (iFilterCount == 1 || (iFilterCount == 2 && bV_F && bVGN_F)) {
+                        if (bGF_F) {
+                            $(".clsGF_Row").show();
+                        }
+                        if (bKOSHER_F) {
+                            $(".clsKOSHER_Row").show();
+                        }
+                        if (bHalal_F) {
+                            $(".clsHALAL_Row").show();
+                        }
+                        if (bV_F) {
+                            $(".clsV_Row").show();
+                            //$(".clsVGN_Row").show();
+                        }
+                        if (bVGN_F) {
+                            $(".clsVGN_Row").show();
+                        }
+                    }
+
+
+
+                } else {
+                    $(".clsMenuItem").show();
+                }
+
+            }
+
+            function ApplyFilter() {
+
+                ApplyFilter_Separate_V_VGN();
+
+                //ApplyFilter_Combine_V_VGN();
+            }
+
+        }); //document ready
+
+        function isOptionsReady(sFieldName) {
+            var strDate = $("#MainContent_lstDay").val().trim();
+            var strMealType = $("#MainContent_lstMealType").val().trim();
+            var strLocation = $("#MainContent_lstLocations").val().trim();
+
+            var isReadyForPostBack = false;
+
+            if (strDate == "" || strMealType == "" || strLocation == "") {
+                isReadyForPostBack = false;
+            } else {
+                isReadyForPostBack = true;
+            }
+
+            if (isReadyForPostBack) {
+                __doPostBack('GetMenu' + sFieldName, '');
+            }
+
+        }
+
+        var strMealTypeGlobal = $("#MainContent_lstMealType").val().trim();
+        //if (strMealTypeGlobal != "") { $("#MainContent_lstMealType").focus(); }
+    </script>
+
+    <script language=javascript>if (document.forms[0].MainContent_chkGF){document.forms[0].MainContent_chkGF.focus();}</script>
+        </div>
+    </form>
+
+    <div id="dialogMsg" title="Message">
+        <br />
+        <div id="dialogMsgText"></div>
+        <br />
+    </div>
+    <div id="dialogMsgConfirm" title="Confirmation">
+        <br />
+        <div id="dialogMsgTextConfirm"></div>
+        <br />
+    </div>
+</body>
+</html>
+
+
+<script type="text/javascript" src="JavaScripts.js"></script>
+<script type="text/javascript" src="jquery/jquery-1.12.0.min.js"></script>
+<link rel="stylesheet" type="text/css" href="jquery/dataTables.css" />
+<script type="text/javascript" src="jquery/dataTables.js"></script>
+<link type="text/css" href="jquery/jquery-ui.css" rel="stylesheet" />
+<script type="text/javascript" src="jquery/jquery-ui.js"></script>
+<link rel="stylesheet" href="jquery/jquery-ui.css" />
+<link rel="stylesheet" href="jquery/jquery-ui-smoothness.css" />
+
+
+<script>
+
+    $("#dialogMsg").dialog({
+        modal: true,
+        autoOpen: false,
+        draggable: false,
+        resizable: false,
+        position: {
+            my: "center center",
+            at: "center center",
+            of: window,
+            collision: "none"
+        },
+        width: "550px",
+        maxWidth: "90%",
+        dialogClass: 'ui-dialog-osx',
+        buttons: {
+            "OK": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    $("#dialogMsgConfirm").dialog({
+        modal: true,
+        autoOpen: false,
+        draggable: true,
+        resizable: false,
+        position: {
+            my: "center center",
+            at: "center center",
+            of: window,
+            collision: "none"
+        },
+        width: 400,
+        dialogClass: 'ui-dialog-osx',
+        buttons: {
+            "Yes": function () {
+                $(this).dialog("close");
+            },
+            "No": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+</script>
+<iframe id="iframe_KeepSessionAlive" src="RenewSession.aspx" style="display: none;"></iframe>

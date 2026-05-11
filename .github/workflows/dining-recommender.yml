@@ -1,0 +1,109 @@
+name: Stanford Dining Recommender
+
+on:
+  workflow_dispatch:
+    inputs:
+      meal:
+        description: "Meal (auto/breakfast/lunch/brunch/dinner)"
+        required: false
+        default: "auto"
+      date:
+        description: "Date (YYYY-MM-DD, leave blank for today)"
+        required: false
+        default: ""
+      no_ai:
+        description: "Skip AI (true/false)"
+        required: false
+        default: "false"
+
+  schedule:
+    # Target: 8 AM America/Los_Angeles
+    #   PST (UTC-8, Nov–Mar): 16:00 UTC  |  PDT (UTC-7, Mar–Nov): 15:00 UTC
+    - cron: "0 15 * * *"
+    - cron: "0 16 * * *"
+
+    # Target: 11 AM America/Los_Angeles
+    #   PST: 19:00 UTC  |  PDT: 18:00 UTC
+    - cron: "0 18 * * *"
+    - cron: "0 19 * * *"
+
+    # Target: 4 PM America/Los_Angeles
+    #   PST: 00:00 UTC next day  |  PDT: 23:00 UTC
+    - cron: "0 23 * * *"
+    - cron: "0 0 * * *"
+
+jobs:
+  recommend:
+    name: Fetch menus and recommend
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check meal window (scheduled runs only)
+        id: guard
+        if: github.event_name == 'schedule'
+        run: |
+          python3 - <<'PYEOF'
+          import datetime, pytz, os
+
+          la_tz = pytz.timezone("America/Los_Angeles")
+          now = datetime.datetime.now(pytz.utc).astimezone(la_tz)
+          hour = now.hour
+
+          # Breakfast 6–10, lunch/brunch 9–15, dinner 15–21
+          in_window = (6 <= hour < 10) or (9 <= hour < 15) or (15 <= hour < 21)
+
+          print(f"Current LA time: {now.strftime('%Y-%m-%d %H:%M %Z')}")
+          print(f"In meal window: {in_window}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write(f"in_window={'true' if in_window else 'false'}\n")
+          PYEOF
+
+      - name: Run recommender
+        # For scheduled runs, only proceed if within a meal window.
+        # For manual dispatch, always proceed.
+        if: >
+          github.event_name == 'workflow_dispatch' ||
+          steps.guard.outputs.in_window == 'true'
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          MEAL="${{ github.event.inputs.meal || 'auto' }}"
+          NO_AI="${{ github.event.inputs.no_ai || 'false' }}"
+          DATE_ARG="${{ github.event.inputs.date || '' }}"
+
+          CMD="python -m src.main --meal $MEAL"
+          if [ -n "$DATE_ARG" ]; then
+            CMD="$CMD --date $DATE_ARG"
+          fi
+          if [ "$NO_AI" = "true" ]; then
+            CMD="$CMD --no-ai"
+          fi
+
+          echo "Running: $CMD"
+          $CMD
+
+      - name: Run tests
+        run: python -m pytest tests/ -v
+
+      - name: Upload output artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dining-data-${{ github.run_id }}
+          path: data/
+          retention-days: 7
