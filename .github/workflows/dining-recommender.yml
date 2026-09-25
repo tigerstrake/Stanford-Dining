@@ -32,6 +32,11 @@ on:
     - cron: "0 23 * * *"
     - cron: "0 0 * * *"
 
+# `actions: write` is needed by the keepalive step below.
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   recommend:
     name: Fetch menus and recommend
@@ -80,7 +85,8 @@ jobs:
           steps.guard.outputs.in_window == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           MEAL="${{ github.event.inputs.meal || 'auto' }}"
           NO_AI="${{ github.event.inputs.no_ai || 'false' }}"
@@ -107,3 +113,14 @@ jobs:
           name: dining-data-${{ github.run_id }}
           path: data/
           retention-days: 7
+
+      # GitHub disables *scheduled* workflows in a repo that has seen no commits
+      # for 60 days (this is what silently stopped the bot in July 2026).
+      # Re-enabling the workflow through the API resets that inactivity timer
+      # without needing a dummy commit, so do it on every scheduled run.
+      # Idempotent, so it also runs on manual dispatch (which proves the
+      # `actions: write` permission works without waiting for a cron tick).
+      - name: Keep the schedule alive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow enable dining-recommender.yml --repo "$GITHUB_REPOSITORY"

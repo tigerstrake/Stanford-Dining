@@ -1,13 +1,13 @@
 # Stanford Dining Recommender
 
-Fetches Stanford R&DE dining hall menus three times daily, scores them against your food preferences, and sends a recommendation to Discord.
+Fetches Stanford R&DE dining hall menus three times daily, scores them against your food preferences, and sends a recommendation to Telegram.
 
 ## How It Works
 
 1. **Scraper** GETs `https://rdeapps.stanford.edu/dininghallmenu/Menu.aspx`, extracts ASP.NET form state, and POSTs for each dining hall to retrieve that meal's menu.
 2. **Scorer** applies keyword-based rules loaded from `config/preferences.yml` to rank halls by whole foods, protein quality, vegetables, and legumes, while penalizing hard-avoid foods.
 3. **Recommender** sends the scored menus to OpenAI GPT-4o-mini for a personalized recommendation (falls back to the deterministic score if the API call fails).
-4. **Notifier** sends the result to Discord and always prints it to stdout.
+4. **Notifier** sends the result to Telegram (Bot API, HTML formatting) and always prints it to stdout.
 
 ## Quick Start
 
@@ -15,7 +15,7 @@ Fetches Stanford R&DE dining hall menus three times daily, scores them against y
 
 - Python 3.12
 - An OpenAI API key (optional — use `--no-ai` to skip)
-- A Discord webhook URL (optional — recommendation prints to stdout without it)
+- A Telegram bot token and your chat id (optional — recommendation prints to stdout without them; see [Telegram setup](#telegram-setup))
 
 ### Setup
 
@@ -26,7 +26,7 @@ python3 -m venv .venv
 source .venv/bin/activate      # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
-# Edit .env and fill in OPENAI_API_KEY and DISCORD_WEBHOOK_URL
+# Edit .env and fill in OPENAI_API_KEY, TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
 ```
 
 Load your environment variables:
@@ -52,7 +52,7 @@ python -m src.main --meal lunch --date 2026-05-12
 # Skip AI, use scoring only
 python -m src.main --meal dinner --no-ai
 
-# Don't send Discord notification (dry run)
+# Don't send Telegram notification (dry run)
 python -m src.main --dry-run
 
 # Combine flags
@@ -66,7 +66,7 @@ python -m src.main --meal auto --dry-run --no-ai --verbose
 | `--meal` | `auto` | `auto`, `breakfast`, `lunch`, `brunch`, `dinner` |
 | `--date YYYY-MM-DD\|today` | today (LA time) | Override the date; `today` resolves to current LA date |
 | `--no-ai` | off | Skip OpenAI, use scoring-only recommendation |
-| `--dry-run` | off | Run everything but skip Discord notification |
+| `--dry-run` | off | Run everything but skip Telegram notification |
 | `--verbose` | off | Debug logging |
 | `--data-dir` | `data` | Root directory for JSON output |
 
@@ -74,6 +74,26 @@ python -m src.main --meal auto --dry-run --no-ai --verbose
 
 - Raw menu: `data/menus/YYYY-MM-DD/meal.json`
 - Recommendation: `data/recommendations/YYYY-MM-DD/meal.json`
+
+## Telegram setup
+
+1. In Telegram, message **@BotFather**, send `/newbot`, and follow the prompts.
+   It replies with a token like `123456789:AAF...` — that is `TELEGRAM_BOT_TOKEN`.
+2. Open a chat with your new bot and send it any message (for example `/start`).
+   A bot cannot message you until you have messaged it first.
+3. Find your chat id:
+
+   ```bash
+   curl -s "https://api.telegram.org/bot<TOKEN>/getUpdates" | python3 -m json.tool | grep -A2 '"chat"'
+   ```
+
+   The `"id"` under `"chat"` is `TELEGRAM_CHAT_ID`. For a group, add the bot to the
+   group, send a message there, and use the group's id (it is negative).
+4. Put both values in `.env` locally and in the GitHub Actions secrets (below).
+
+`TELEGRAM_CHAT_ID` accepts a comma-separated list to send to several chats.
+Messages use Telegram's HTML `parse_mode`; scraped dish names are HTML-escaped
+before sending, and messages are cut at Telegram's 4096-character limit.
 
 ## Tests
 
@@ -99,6 +119,21 @@ The workflow runs automatically:
 
 GitHub Actions cron uses UTC only. The schedule above fires at the correct LA time during standard time (PST, November–March). During daylight saving time (PDT, March–November), runs fire 1 hour later but remain within the correct meal window. The `--meal auto` flag uses the actual LA clock to pick the right meal regardless of when the cron fires.
 
+### Why it stopped in July 2026, and the keepalive
+
+GitHub automatically disables the `schedule` trigger in any repository that has
+had no commits for 60 days. This repo's last commit was 2026-05-11, and the last
+scheduled run was 2026-07-11 — exactly 60 days later. No code had broken.
+
+The workflow now ends every scheduled run with `gh workflow enable`, which
+resets GitHub's inactivity timer without a dummy commit (this is why the job
+declares `permissions: actions: write`). If the workflow is ever disabled again
+(Actions tab shows a yellow banner), re-enable it once by hand:
+
+```bash
+gh workflow enable dining-recommender.yml -R tigerstrake/Stanford-Dining
+```
+
 ### GitHub Secrets Required
 
 Add these in **Settings → Secrets and variables → Actions**:
@@ -106,9 +141,10 @@ Add these in **Settings → Secrets and variables → Actions**:
 | Secret | Description |
 |--------|-------------|
 | `OPENAI_API_KEY` | Your OpenAI API key |
-| `DISCORD_WEBHOOK_URL` | Discord channel webhook URL |
+| `TELEGRAM_BOT_TOKEN` | Bot token from @BotFather |
+| `TELEGRAM_CHAT_ID` | Chat id to send to (comma-separate several) |
 
-Both are optional. Without `OPENAI_API_KEY` the script falls back to deterministic scoring. Without `DISCORD_WEBHOOK_URL` the recommendation prints to the workflow log only.
+All are optional. Without `OPENAI_API_KEY` the script falls back to deterministic scoring. Without both Telegram secrets the recommendation prints to the workflow log only.
 
 ### Manual Trigger
 
@@ -122,7 +158,7 @@ Go to **Actions → Stanford Dining Recommender → Run workflow** and optionall
 | Today's date not in dropdown | Hard exit with clear error message |
 | Fewer than 3 halls have menu items | Warning in output; `reliable: false` in JSON |
 | OpenAI API fails | Falls back to deterministic scoring |
-| Discord webhook fails | Recommendation printed to stdout |
+| Telegram send fails | Recommendation printed to stdout |
 
 ## Dietary Preferences
 
@@ -196,10 +232,11 @@ stanford-dining-recommender/
 │   ├── scraper.py        # Stanford menu scraper
 │   ├── scorer.py         # Deterministic keyword scoring (reads preferences.yml)
 │   ├── recommender.py    # OpenAI integration + fallback (reads preferences.yml)
-│   ├── notifier.py       # Discord + stdout notifications
+│   ├── notifier.py       # Telegram + stdout notifications
 │   └── main.py           # CLI entry point
 ├── tests/
 │   ├── fixtures/         # Saved HTML for offline testing
+│   ├── test_notifier.py
 │   ├── test_scorer.py
 │   └── test_scraper.py
 ├── data/                 # Output JSON (gitignored)
@@ -212,7 +249,7 @@ stanford-dining-recommender/
 
 ## Adding Email Notifications
 
-Open `src/notifier.py` and add a function alongside `send_discord`:
+Open `src/notifier.py` and add a function alongside `send_telegram`:
 
 ```python
 def send_email(rec: Recommendation, smtp_host: str, ...) -> bool:

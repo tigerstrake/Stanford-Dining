@@ -4,7 +4,7 @@ import json
 import logging
 import os
 import sys
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from pathlib import Path
 from typing import Optional
 
@@ -84,7 +84,7 @@ def _save_json(path: Path, data: dict) -> None:
 @click.option("--no-ai", is_flag=True, default=False,
               help="Skip OpenAI call, use deterministic scoring only")
 @click.option("--dry-run", is_flag=True, default=False,
-              help="Scrape and score but do not send Discord notification")
+              help="Scrape and score but do not send Telegram notification")
 @click.option("--data-dir", default="data", show_default=True,
               help="Root directory for saved JSON output")
 @click.option("--verbose", "-v", is_flag=True, default=False)
@@ -93,7 +93,7 @@ def main(meal: str, date_arg: Optional[str], no_ai: bool, dry_run: bool,
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    now_utc = datetime.utcnow().replace(tzinfo=pytz.utc)
+    now_utc = datetime.now(timezone.utc)
     now_la = now_utc.astimezone(LA_TZ)
 
     if date_arg and date_arg.lower() == "today":
