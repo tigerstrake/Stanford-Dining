@@ -62,3 +62,19 @@ class Recommendation(BaseModel):
     ai_generated: bool = False
     date: str
     meal: str
+
+
+class HallHours(BaseModel):
+    """Opening hours for one dining hall, as published on rde.stanford.edu."""
+
+    hall_name: str
+    note: str = ""                       # e.g. "Fall Hours Begin Friday, September 18th"
+    weekday: dict = Field(default_factory=dict)   # {"Breakfast": "7:30 a.m. - 10:00 a.m.", ...}
+    weekend: dict = Field(default_factory=dict)   # {"Brunch/Lunch": "...", "Dinner": "..."}
+    late_night: str = ""                 # e.g. "Arrillaga Nights (Tuesday - Saturday): 9:00 p.m. - 2:00 a.m."
+
+
+class DiningHours(BaseModel):
+    fetched_at: str
+    source_url: str
+    halls: dict = Field(default_factory=dict)     # {normalised key: HallHours}

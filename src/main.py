@@ -11,6 +11,7 @@ from typing import Optional
 import click
 import pytz
 
+from .hours import load_dining_hours_safe
 from .models import ScrapeResult
 from .notifier import notify
 from .recommender import get_recommendation
@@ -170,8 +171,13 @@ def main(meal: str, date_arg: Optional[str], no_ai: bool, dry_run: bool,
     rec_path = Path(data_dir) / "recommendations" / date_iso / f"{resolved_meal.lower()}.json"
     _save_json(rec_path, rec.model_dump())
 
+    # --- HOURS (best-effort; never blocks the message) ---
+    hours = load_dining_hours_safe()
+    if hours is not None:
+        _save_json(Path(data_dir) / "hours" / f"{date_iso}.json", hours.model_dump())
+
     # --- NOTIFY ---
-    notify(rec, dry_run=dry_run)
+    notify(rec, dry_run=dry_run, hours=hours)
 
 
 if __name__ == "__main__":

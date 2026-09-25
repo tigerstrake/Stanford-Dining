@@ -7,7 +7,8 @@ Fetches Stanford R&DE dining hall menus three times daily, scores them against y
 1. **Scraper** GETs `https://rdeapps.stanford.edu/dininghallmenu/Menu.aspx`, extracts ASP.NET form state, and POSTs for each dining hall to retrieve that meal's menu.
 2. **Scorer** applies keyword-based rules loaded from `config/preferences.yml` to rank halls by whole foods, protein quality, vegetables, and legumes, while penalizing hard-avoid foods.
 3. **Recommender** sends the scored menus to OpenAI GPT-4o-mini for a personalized recommendation (falls back to the deterministic score if the API call fails).
-4. **Notifier** sends the result to Telegram (Bot API, HTML formatting) and always prints it to stdout.
+4. **Hours** fetches today's opening hours for every hall from the R&DE [Dining Locations & Hours](https://rde.stanford.edu/dining-hospitality/dining-locations-hours) page.
+5. **Notifier** sends the result to Telegram (Bot API, HTML formatting) and always prints it to stdout. Each message shows the recommended meal's time window next to the best and backup hall, plus both halls' full hours for the day.
 
 ## Quick Start
 
@@ -74,6 +75,7 @@ python -m src.main --meal auto --dry-run --no-ai --verbose
 
 - Raw menu: `data/menus/YYYY-MM-DD/meal.json`
 - Recommendation: `data/recommendations/YYYY-MM-DD/meal.json`
+- Dining hours: `data/hours/YYYY-MM-DD.json`
 
 ## Telegram setup
 
@@ -159,6 +161,7 @@ Go to **Actions → Stanford Dining Recommender → Run workflow** and optionall
 | Fewer than 3 halls have menu items | Warning in output; `reliable: false` in JSON |
 | OpenAI API fails | Falls back to deterministic scoring |
 | Telegram send fails | Recommendation printed to stdout |
+| Hours page unreachable or changed | Message is sent without the hours section (warning in log) |
 
 ## Dietary Preferences
 
@@ -232,10 +235,12 @@ stanford-dining-recommender/
 │   ├── scraper.py        # Stanford menu scraper
 │   ├── scorer.py         # Deterministic keyword scoring (reads preferences.yml)
 │   ├── recommender.py    # OpenAI integration + fallback (reads preferences.yml)
+│   ├── hours.py          # Dining hall opening hours scraper (rde.stanford.edu)
 │   ├── notifier.py       # Telegram + stdout notifications
 │   └── main.py           # CLI entry point
 ├── tests/
 │   ├── fixtures/         # Saved HTML for offline testing
+│   ├── test_hours.py
 │   ├── test_notifier.py
 │   ├── test_scorer.py
 │   └── test_scraper.py

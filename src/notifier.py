@@ -3,11 +3,13 @@ from __future__ import annotations
 import html
 import logging
 import os
+from datetime import date
 from typing import List, Optional
 
 import requests
 
-from .models import Recommendation
+from .hours import day_summary, hours_for_meal, is_weekend, lookup
+from .models import DiningHours, Recommendation
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +28,59 @@ def _esc(text: str) -> str:
     return html.escape(str(text), quote=False)
 
 
-def format_recommendation_html(rec: Recommendation) -> str:
+def _rec_date(rec: Recommendation) -> Optional[date]:
+    try:
+        return date.fromisoformat(rec.date)
+    except ValueError:
+        return None
+
+
+def _meal_window(rec: Recommendation, hours: Optional[DiningHours], hall_name: str) -> str:
+    """" (Lunch 11:00 a.m. - 1:30 p.m.)" for the recommended meal, or "" if unknown."""
+    d = _rec_date(rec)
+    hall = lookup(hours, hall_name)
+    if d is None or hall is None:
+        return ""
+    window = hours_for_meal(hall, rec.meal, is_weekend(d))
+    return f" ({rec.meal.title()} {window})" if window else ""
+
+
+def _hours_lines(rec: Recommendation, hours: Optional[DiningHours]) -> List[tuple]:
+    """[(hall_name, day summary)] for the best and backup halls, in that order."""
+    d = _rec_date(rec)
+    if d is None or hours is None:
+        return []
+    out = []
+    for name in (rec.best_hall, rec.backup_hall):
+        hall = lookup(hours, name)
+        if hall is None or name in [n for n, _ in out]:
+            continue
+        summary = day_summary(hall, is_weekend(d))
+        if summary:
+            out.append((name, summary))
+    return out
+
+
+def _hours_note(rec: Recommendation, hours: Optional[DiningHours]) -> str:
+    for name in (rec.best_hall, rec.backup_hall):
+        hall = lookup(hours, name)
+        if hall is not None and hall.note:
+            return hall.note
+    return ""
+
+
+def _day_name(rec: Recommendation) -> str:
+    d = _rec_date(rec)
+    return d.strftime("%A") if d else "today"
+
+
+def format_recommendation_html(rec: Recommendation, hours: Optional[DiningHours] = None) -> str:
     """Telegram HTML-formatted message (parse_mode=HTML)."""
     lines = [
         f"🍽 <b>Stanford Dining — {_esc(rec.meal.title())} on {_esc(rec.date)}</b>",
         "",
-        f"<b>Best hall:</b> {_esc(rec.best_hall)}",
-        f"<b>Backup hall:</b> {_esc(rec.backup_hall)}",
+        f"<b>Best hall:</b> {_esc(rec.best_hall)}{_esc(_meal_window(rec, hours, rec.best_hall))}",
+        f"<b>Backup hall:</b> {_esc(rec.backup_hall)}{_esc(_meal_window(rec, hours, rec.backup_hall))}",
         f"<b>Confidence:</b> {_esc(rec.confidence.upper())}",
         "",
         "<b>Recommended plate</b>",
@@ -48,15 +96,25 @@ def format_recommendation_html(rec: Recommendation) -> str:
     lines.append(f"<b>Reasoning:</b> {_esc(rec.reasoning)}")
     if not rec.ai_generated:
         lines.append("<i>(deterministic scoring — AI not used)</i>")
+
+    hours_lines = _hours_lines(rec, hours)
+    if hours_lines:
+        lines.append("")
+        lines.append(f"🕒 <b>Hours {_esc(_day_name(rec))}</b>")
+        for name, summary in hours_lines:
+            lines.append(f"<b>{_esc(name)}:</b> {_esc(summary)}")
+        note = _hours_note(rec, hours)
+        if note:
+            lines.append(f"<i>{_esc(note)}</i>")
     return "\n".join(lines)
 
 
-def format_recommendation_plain(rec: Recommendation) -> str:
+def format_recommendation_plain(rec: Recommendation, hours: Optional[DiningHours] = None) -> str:
     lines = [
         f"Stanford Dining Recommendation — {rec.meal.title()} on {rec.date}",
         "=" * 60,
-        f"Best hall:    {rec.best_hall}",
-        f"Backup hall:  {rec.backup_hall}",
+        f"Best hall:    {rec.best_hall}{_meal_window(rec, hours, rec.best_hall)}",
+        f"Backup hall:  {rec.backup_hall}{_meal_window(rec, hours, rec.backup_hall)}",
         f"Confidence:   {rec.confidence.upper()}",
         "",
         "Recommended plate:",
@@ -72,6 +130,16 @@ def format_recommendation_plain(rec: Recommendation) -> str:
     lines.append(f"Reasoning: {rec.reasoning}")
     if not rec.ai_generated:
         lines.append("(deterministic scoring — AI not used)")
+
+    hours_lines = _hours_lines(rec, hours)
+    if hours_lines:
+        lines.append("")
+        lines.append(f"Hours {_day_name(rec)}:")
+        for name, summary in hours_lines:
+            lines.append(f"  {name}: {summary}")
+        note = _hours_note(rec, hours)
+        if note:
+            lines.append(f"  ({note})")
     return "\n".join(lines)
 
 
@@ -95,6 +163,7 @@ def send_telegram(
     chat_ids: Optional[List[str]] = None,
     api_base: str = TELEGRAM_API_BASE,
     timeout: int = 15,
+    hours: Optional[DiningHours] = None,
 ) -> bool:
     """Send the recommendation to one or more Telegram chats via the Bot API.
 
@@ -112,7 +181,7 @@ def send_telegram(
         logger.warning("TELEGRAM_CHAT_ID not set — skipping Telegram notification")
         return False
 
-    text = _truncate(format_recommendation_html(rec))
+    text = _truncate(format_recommendation_html(rec, hours))
     url = f"{api_base.rstrip('/')}/bot{token}/sendMessage"
 
     delivered = 0
@@ -150,14 +219,14 @@ def send_telegram(
     return delivered > 0
 
 
-def notify(rec: Recommendation, dry_run: bool = False) -> None:
-    plain = format_recommendation_plain(rec)
+def notify(rec: Recommendation, dry_run: bool = False, hours: Optional[DiningHours] = None) -> None:
+    plain = format_recommendation_plain(rec, hours)
     print(plain)
 
     if dry_run:
         logger.info("Dry-run mode: skipping Telegram notification")
         return
 
-    success = send_telegram(rec)
+    success = send_telegram(rec, hours=hours)
     if not success:
         logger.info("Recommendation printed to stdout as fallback")
