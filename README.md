@@ -64,7 +64,7 @@ python -m src.main --meal auto --dry-run --no-ai --verbose
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--meal` | `auto` | `auto`, `breakfast`, `lunch`, `brunch`, `dinner` |
+| `--meal` | `auto` | `auto`, `breakfast`, `lunch`, `brunch`, `dinner`. `auto` picks by LA time; on weekends it uses `lunch` because the menu site files the brunch/lunch sitting under Lunch (its Brunch option is always empty). If the picked meal has no menu, `auto` tries the nearest alternative before giving up. |
 | `--date YYYY-MM-DD\|today` | today (LA time) | Override the date; `today` resolves to current LA date |
 | `--no-ai` | off | Skip OpenAI, use scoring-only recommendation |
 | `--dry-run` | off | Run everything but skip Telegram notification |
@@ -158,6 +158,7 @@ Go to **Actions → Stanford Dining Recommender → Run workflow** and optionall
 |---------|----------|
 | No dining halls found on page | Hard exit (site structure may have changed) |
 | Today's date not in dropdown | Hard exit with clear error message |
+| All halls empty for the meal (not posted yet, holiday, break) | Warning, no message sent, exit 0 — scheduled runs do not fail |
 | Fewer than 3 halls have menu items | Warning in output; `reliable: false` in JSON |
 | OpenAI API fails | Falls back to deterministic scoring |
 | Telegram send fails | Recommendation printed to stdout |

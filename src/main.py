@@ -35,15 +35,30 @@ MEAL_TIME_RANGES = {
 }
 
 
+# Meals to try, in order, when the detected meal has no menu at all. Only used
+# for --meal auto; an explicitly requested meal is never swapped.
+MEAL_FALLBACKS = {
+    "Brunch": ["Lunch", "Breakfast"],
+    "Lunch": ["Brunch"],
+    "Breakfast": ["Brunch"],
+    "Dinner": [],
+}
+
+
 def _detect_meal(now_la: datetime) -> str:
     hour = now_la.hour
     weekday = now_la.weekday()  # 0=Mon, 6=Sun
     is_weekend = weekday >= 5
 
+    if is_weekend:
+        # The hours page calls the weekend daytime sitting "Brunch/Lunch", but
+        # the menu site publishes it under "Lunch" — its "Brunch" option is
+        # empty on every date, which made every weekend run fail.
+        return "Lunch" if hour < 15 else "Dinner"
     if 6 <= hour < 10:
-        return "Brunch" if is_weekend else "Breakfast"
+        return "Breakfast"
     if 10 <= hour < 15:
-        return "Brunch" if is_weekend else "Lunch"
+        return "Lunch"
     if 15 <= hour < 21:
         return "Dinner"
     # Outside defined windows — pick nearest meal
@@ -117,25 +132,40 @@ def main(meal: str, date_arg: Optional[str], no_ai: bool, dry_run: bool,
 
     # --- SCRAPE ---
     scraper = StanfordMenuScraper()
-    try:
-        halls = scraper.scrape_all(date_str=date_str, meal=resolved_meal)
-    except RuntimeError as exc:
-        logger.error("Scraping failed: %s", exc)
-        sys.exit(1)
+    candidates = [resolved_meal]
+    if meal == "auto":
+        candidates += MEAL_FALLBACKS.get(resolved_meal, [])
 
-    if not halls:
-        logger.error("No dining halls found — failing loudly")
-        sys.exit(1)
+    halls = []
+    for candidate in candidates:
+        try:
+            halls = scraper.scrape_all(date_str=date_str, meal=candidate)
+        except RuntimeError as exc:
+            # Structural failure (page changed, date missing): fail loudly.
+            logger.error("Scraping failed: %s", exc)
+            sys.exit(1)
+        if not halls:
+            logger.error("No dining halls found — failing loudly")
+            sys.exit(1)
+        if any(h.items for h in halls):
+            if candidate != resolved_meal:
+                logger.warning(
+                    "No %s menus for %s — using %s instead", resolved_meal, date_str, candidate
+                )
+                resolved_meal = candidate
+            break
+        logger.warning("All halls returned empty menus for %s / %s", date_str, candidate)
 
     halls_with_items = [h for h in halls if h.items]
     warnings = []
     if len(halls_with_items) == 0:
-        logger.error(
-            "All halls returned empty menus for %s / %s. "
-            "The menu may not be posted yet.",
-            date_str, resolved_meal,
+        # Not an error: menus are simply not posted (holiday, break, or not
+        # yet published). Exit cleanly so scheduled runs do not page anyone.
+        logger.warning(
+            "No menus posted for %s (%s) — nothing to recommend, skipping.",
+            date_str, "/".join(candidates),
         )
-        sys.exit(1)
+        return
     if len(halls_with_items) < 3:
         msg = (
             f"Only {len(halls_with_items)} hall(s) returned menu items — "
