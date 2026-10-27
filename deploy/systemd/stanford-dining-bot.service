@@ -1,0 +1,13 @@
+[Unit]
+Description=Stanford dining Telegram bot (answers messages and 👍/👎 taps)
+
+[Service]
+WorkingDirectory=%h/dev/Stanford-Dining
+EnvironmentFile=%h/dev/Stanford-Dining/.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=%h/dev/Stanford-Dining/.venv/bin/python -m src.bot
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -121,16 +121,25 @@ hall opens for that meal, in `America/Los_Angeles` with DST handled by systemd:
 | Sat–Sun | — | 9:00 AM (brunch/lunch) | 4:30 PM |
 
 The times follow the current quarter's dining hours (see the comments in
-`deploy/systemd/stanford-dining.timer`). Every run pulls `main` and re-installs requirements first,
-so a push here is picked up at the next run. If a run exits non-zero,
-`stanford-dining-failed.service` sends a short "run failed" message to the same
-Telegram chat.
+`deploy/systemd/stanford-dining.timer`). When the hours page changes, the next
+scheduled run sends a "Dining hours changed" message with the new openings and
+the send times they imply (`src/hours_watch.py`). It doesn't edit the timer
+itself.
+
+**Pushing to `main` deploys.** Before each scheduled run, `deploy/update.sh`
+pulls `main` and installs the pinned requirements. If anything changed, it also
+copies updated units into `~/.config/systemd/user/` and restarts the bot.
+If a run exits non-zero, `stanford-dining-failed.service` sends a short
+"run failed" message to the same Telegram chat.
 
 | File | Purpose |
 |------|---------|
-| `deploy/systemd/stanford-dining.service` | One run: `git pull`, `pip install`, `python -m src.main --meal auto` |
+| `deploy/systemd/stanford-dining.service` | One run: `update.sh`, then `python -m src.main --meal auto` |
 | `deploy/systemd/stanford-dining.timer` | The schedule |
-| `deploy/systemd/stanford-dining-failed.service` | `OnFailure=` hook that runs `deploy/notify-failure.sh` |
+| `deploy/systemd/stanford-dining-failed.service` | `OnFailure=` hook: `notify-failure.sh` plus a health-check `fail` ping |
+| `deploy/systemd/stanford-dining-bot.service` | The always-on Telegram bot (`python -m src.bot`) |
+| `deploy/update.sh` | Pull, install, sync units, restart the bot |
+| `deploy/hc-ping.sh` | Optional dead-man's-switch pings (see [Health check](#health-check-optional)) |
 
 The units expect the checkout at `~/dev/Stanford-Dining` with a `.venv` and a
 `.env` (same keys as `.env.example`; systemd reads it via `EnvironmentFile=`).
@@ -141,13 +150,10 @@ cd ~/dev/Stanford-Dining
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 cp .env.example .env && chmod 600 .env    # then fill it in
 mkdir -p ~/.config/systemd/user && cp deploy/systemd/* ~/.config/systemd/user/
-sudo loginctl enable-linger "$USER"       # run user timers without a login session
+sudo loginctl enable-linger "$USER"       # run user units without a login session
 systemctl --user daemon-reload
-systemctl --user enable --now stanford-dining.timer
+systemctl --user enable --now stanford-dining.timer stanford-dining-bot.service
 ```
-
-`git pull` does not reinstall the units. After changing anything in
-`deploy/systemd/`, copy them again and run `systemctl --user daemon-reload`.
 
 Day-to-day:
 
@@ -155,7 +161,53 @@ Day-to-day:
 systemctl --user list-timers stanford-dining.timer   # next run
 systemctl --user start stanford-dining.service       # run now (sends to Telegram)
 journalctl --user -u stanford-dining -n 50           # logs of recent runs
+journalctl --user -u stanford-dining-bot -f          # the bot, live
 ```
+
+### Talking to the bot
+
+The bot answers messages from the chats in `TELEGRAM_CHAT_ID` and ignores
+everyone else. It accepts commands or plain text:
+
+| Ask | Get |
+|-----|-----|
+| `/now`, "I'm hungry" | A pick for the next meal (after 9 PM, tomorrow's first) |
+| `/breakfast` `/lunch` `/dinner`, "dinner tomorrow" | That meal, today or tomorrow |
+| `/tomorrow` | Tomorrow's first meal |
+| `/hall flomo`, "what's at arrillaga for dinner" | One hall's whole menu, each dish marked ✅/⛔ |
+| `/hours`, "when does wilbur open" | Every hall's hours |
+| `/stats` | Your 👍/👎 per hall |
+
+A meal that was already sent is answered from `data/`, with no scrape and no
+OpenAI call. Anything new costs one scrape and, for picks, one OpenAI call.
+
+### 👍/👎 feedback
+
+Every pick has 👍/👎 buttons. Votes go to `data/feedback.jsonl` (the last
+vote per meal wins) and feed back in three ways:
+
+- each net 👍 or 👎 on a hall's recent picks moves that hall's score by 1.5
+  points, capped at ±4.5 over the last 30 days;
+- a hall that was already the best pick for the same meal on each of the last
+  2 days loses 3 points, so close calls rotate;
+- the AI sees your recent votes with the plates they were about.
+
+All of these numbers are under `adjustments:` in `config/preferences.yml`.
+
+### Health check (optional)
+
+The failure alert only fires when a run starts and crashes. If the NUC is off
+or offline, nothing runs and nothing alerts. A free
+[healthchecks.io](https://healthchecks.io) check closes that gap:
+
+1. Create a check with **Schedule: Simple, Period 18 hours, Grace 1 hour**.
+   The longest gap between runs is about 16.5 hours (Friday 4:30 PM to
+   Saturday 9:00 AM).
+2. Under the check's **Integrations**, add Telegram or email so it can reach you.
+3. Put the check's ping URL in the server's `.env` as `HC_PING_URL=...`.
+
+Each run then pings `/start` and success (or `/fail`), and healthchecks.io
+alerts you if the pings stop.
 
 ## GitHub Actions
 
@@ -268,8 +320,12 @@ stanford-dining-recommender/
 │   ├── scorer.py         # Deterministic keyword scoring (reads preferences.yml)
 │   ├── recommender.py    # OpenAI integration + fallback (reads preferences.yml)
 │   ├── hours.py          # Dining hall opening hours scraper (rde.stanford.edu)
-│   ├── notifier.py       # Telegram + stdout notifications
-│   └── main.py           # CLI entry point
+│   ├── notifier.py       # Telegram sending, 👍/👎 buttons
+│   ├── storage.py        # data/ paths and cached reads
+│   ├── feedback.py       # Votes and the score nudges they cause
+│   ├── hours_watch.py    # "Dining hours changed" alert
+│   ├── bot.py            # Always-on Telegram bot
+│   └── main.py           # CLI entry point (one scheduled run)
 ├── tests/
 │   ├── fixtures/         # Saved HTML for offline testing
 │   ├── test_hours.py

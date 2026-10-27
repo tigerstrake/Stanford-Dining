@@ -6,10 +6,10 @@ OnFailure=stanford-dining-failed.service
 Type=oneshot
 WorkingDirectory=%h/dev/Stanford-Dining
 EnvironmentFile=%h/dev/Stanford-Dining/.env
-# Run whatever is on main, as the GitHub Actions job did. Both steps are
-# best-effort ("-"): if GitHub or PyPI is unreachable, the code already
-# checked out still runs.
-ExecStartPre=-/usr/bin/git pull --ff-only --quiet
-ExecStartPre=-%h/dev/Stanford-Dining/.venv/bin/pip install --quiet --disable-pip-version-check -r requirements.txt
+ExecStartPre=-/bin/bash %h/dev/Stanford-Dining/deploy/hc-ping.sh start
+# Pull main, install requirements, sync these units, and restart the bot if
+# anything changed. Best-effort ("-"): the checked-out code runs regardless.
+ExecStartPre=-/bin/bash %h/dev/Stanford-Dining/deploy/update.sh
 ExecStart=%h/dev/Stanford-Dining/.venv/bin/python -m src.main --meal auto
+ExecStartPost=-/bin/bash %h/dev/Stanford-Dining/deploy/hc-ping.sh
 TimeoutStartSec=15min
