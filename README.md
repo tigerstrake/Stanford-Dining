@@ -111,7 +111,7 @@ Tests cover:
 
 ## Running on a server (systemd)
 
-The scheduled runs happen on a home Ubuntu server (the doorboard NUC) under a
+Scheduled runs happen on a home Ubuntu server (the doorboard NUC) under a
 systemd **user** timer: 8 AM, 11 AM and 4 PM `America/Los_Angeles`, with DST
 handled by systemd. Every run pulls `main` and re-installs requirements first,
 so a push here is picked up at the next run. If a run exits non-zero,
@@ -151,30 +151,13 @@ journalctl --user -u stanford-dining -n 50           # logs of recent runs
 
 ## GitHub Actions
 
-The workflow runs automatically:
+The workflow is **manual only** since 2026-10-27; the schedule moved to the
+server (see above). GitHub's cron was a poor fit for two reasons:
 
-| GitHub Actions time (UTC) | LA time (PST) | LA time (PDT) |
-|---------------------------|---------------|---------------|
-| `0 16 * * *`              | 8:00 AM ✓     | 9:00 AM ✓ (still breakfast) |
-| `0 19 * * *`              | 11:00 AM ✓    | 12:00 PM ✓ (still lunch) |
-| `0 0 * * *`               | 4:00 PM ✓     | 5:00 PM ✓ (still dinner) |
-
-GitHub Actions cron uses UTC only. The schedule above fires at the correct LA time during standard time (PST, November–March). During daylight saving time (PDT, March–November), runs fire 1 hour later but remain within the correct meal window. The `--meal auto` flag uses the actual LA clock to pick the right meal regardless of when the cron fires.
-
-### Why it stopped in July 2026, and the keepalive
-
-GitHub automatically disables the `schedule` trigger in any repository that has
-had no commits for 60 days. This repo's last commit was 2026-05-11, and the last
-scheduled run was 2026-07-11 — exactly 60 days later. No code had broken.
-
-The workflow now ends every scheduled run with `gh workflow enable`, which
-resets GitHub's inactivity timer without a dummy commit (this is why the job
-declares `permissions: actions: write`). If the workflow is ever disabled again
-(Actions tab shows a yellow banner), re-enable it once by hand:
-
-```bash
-gh workflow enable dining-recommender.yml -R tigerstrake/Stanford-Dining
-```
+- It disables the `schedule` trigger in a repo with no commits for 60 days.
+  That silently stopped the bot from 2026-07-11 to 2026-09-25, and it needed a
+  `gh workflow enable` keepalive step afterwards.
+- Runs started hours late under load. The 8 AM run was firing at about 1:50 PM.
 
 ### GitHub Secrets Required
 

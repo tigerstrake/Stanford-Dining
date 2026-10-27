@@ -16,26 +16,12 @@ on:
         required: false
         default: "false"
 
-  schedule:
-    # Target: 8 AM America/Los_Angeles
-    #   PST (UTC-8, Nov–Mar): 16:00 UTC  |  PDT (UTC-7, Mar–Nov): 15:00 UTC
-    - cron: "0 15 * * *"
-    - cron: "0 16 * * *"
+# Manual runs only. The schedule lives in a systemd timer on the home server
+# (deploy/systemd/); GitHub's cron fired hours late and shut itself off after
+# 60 days without a commit.
 
-    # Target: 11 AM America/Los_Angeles
-    #   PST: 19:00 UTC  |  PDT: 18:00 UTC
-    - cron: "0 18 * * *"
-    - cron: "0 19 * * *"
-
-    # Target: 4 PM America/Los_Angeles
-    #   PST: 00:00 UTC next day  |  PDT: 23:00 UTC
-    - cron: "0 23 * * *"
-    - cron: "0 0 * * *"
-
-# `actions: write` is needed by the keepalive step below.
 permissions:
   contents: read
-  actions: write
 
 jobs:
   recommend:
@@ -56,33 +42,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Check meal window (scheduled runs only)
-        id: guard
-        if: github.event_name == 'schedule'
-        run: |
-          python3 - <<'PYEOF'
-          import datetime, pytz, os
-
-          la_tz = pytz.timezone("America/Los_Angeles")
-          now = datetime.datetime.now(pytz.utc).astimezone(la_tz)
-          hour = now.hour
-
-          # Breakfast 6–10, lunch/brunch 9–15, dinner 15–21
-          in_window = (6 <= hour < 10) or (9 <= hour < 15) or (15 <= hour < 21)
-
-          print(f"Current LA time: {now.strftime('%Y-%m-%d %H:%M %Z')}")
-          print(f"In meal window: {in_window}")
-
-          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-              f.write(f"in_window={'true' if in_window else 'false'}\n")
-          PYEOF
-
       - name: Run recommender
-        # For scheduled runs, only proceed if within a meal window.
-        # For manual dispatch, always proceed.
-        if: >
-          github.event_name == 'workflow_dispatch' ||
-          steps.guard.outputs.in_window == 'true'
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -113,14 +73,3 @@ jobs:
           name: dining-data-${{ github.run_id }}
           path: data/
           retention-days: 7
-
-      # GitHub disables *scheduled* workflows in a repo that has seen no commits
-      # for 60 days (this is what silently stopped the bot in July 2026).
-      # Re-enabling the workflow through the API resets that inactivity timer
-      # without needing a dummy commit, so do it on every scheduled run.
-      # Idempotent, so it also runs on manual dispatch (which proves the
-      # `actions: write` permission works without waiting for a cron tick).
-      - name: Keep the schedule alive
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh workflow enable dining-recommender.yml --repo "$GITHUB_REPOSITORY"
