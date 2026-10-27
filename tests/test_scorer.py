@@ -153,3 +153,63 @@ def test_deterministic_recommendation_no_items():
     rec = build_deterministic_recommendation(scored, date="2026-05-11", meal="Lunch")
     assert rec.best_hall == "None"
     assert rec.confidence == "low"
+
+
+# ------- breakfast (real items from Arrillaga, 2026-10-27) -------
+
+def _breakfast_line():
+    return [
+        make_item("Steel Cut Oatmeal", "steel cut oats"),
+        make_item("Seasonal Fruit", "seasonal fresh fruit"),
+        make_item("Scrambled Eggs", "eggs, canola/olive oil blend, salt"),
+        make_item("Chicken Apple Sausage", "chicken, apples, salt, sugar, dextrose, spices"),
+        make_item("Breakfast Potatoes", "potatoes, onions, oil (canola oil, sunflower seed oil, cotton seed oil)"),
+        make_item("Waffles", "enriched wheat flour, sugar, soybean oil, buckwheat flour"),
+        make_item("Gluten-Free Waffles", "white rice flour, degerminated corn flour, cane sugar"),
+    ]
+
+
+def test_seasonal_fruit_counts_as_fruit():
+    score, tags = score_item(make_item("Seasonal Fruit", "seasonal fresh fruit"))
+    assert score > 0
+    assert "+fruit" in tags
+
+
+def test_any_sausage_is_processed_meat_even_with_apples():
+    score, tags = score_item(make_item("Chicken Apple Sausage", "chicken, apples, salt, sugar"))
+    assert score < 0
+    assert "-ultra_processed_meat" in tags
+
+
+def test_seed_oil_is_not_seeds():
+    _, tags = score_item(make_item("Breakfast Potatoes", "potatoes, sunflower seed oil"))
+    assert "+nuts_seeds" not in tags
+    _, tags = score_item(make_item("Trail Mix", "sunflower seeds, raisins"))
+    assert "+nuts_seeds" in tags
+
+
+def test_oil_keywords_still_match_oil():
+    _, tags = score_item(make_item("Roasted Squash", "squash, olive oil"))
+    assert "+healthy_fats" in tags
+    _, tags = score_item(make_item("Fish Oil Capsule Smoothie", "banana, fish oil"))
+    assert "-fish_seafood" not in tags
+
+
+def test_breakfast_plate_is_oatmeal_and_fruit_not_sausage():
+    menu = DiningHallMenu(hall_name="Arrillaga", hall_id="a", date="2026-10-27",
+                          meal="Breakfast", items=_breakfast_line())
+    rec = build_deterministic_recommendation(score_all_halls([menu]), date="2026-10-27", meal="Breakfast")
+    assert rec.recommended_plate[:2] == ["Steel Cut Oatmeal", "Seasonal Fruit"]
+    assert "Chicken Apple Sausage" not in rec.recommended_plate
+    assert "Breakfast Potatoes" not in rec.recommended_plate
+
+
+def test_confidence_follows_the_plate_not_the_hall_total():
+    # Waffles and eggs push the hall total negative, but the plate is solid.
+    items = _breakfast_line() + [make_item("Greek Yogurt Parfait", "greek yogurt, berries, almonds")]
+    menu = DiningHallMenu(hall_name="Arrillaga", hall_id="a", date="2026-10-27",
+                          meal="Breakfast", items=items)
+    scored = score_all_halls([menu])
+    assert scored[0].total_score < 0
+    rec = build_deterministic_recommendation(scored, date="2026-10-27", meal="Breakfast")
+    assert rec.confidence == "medium"

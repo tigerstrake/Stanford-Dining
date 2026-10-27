@@ -137,6 +137,7 @@ scoring:
       score: 1.5
       description: Fresh and whole fruit
       keywords:
+        - fruit
         - apple
         - banana
         - orange
@@ -244,10 +245,10 @@ scoring:
       score: -6.0
       description: >
         Hard avoid — cured, preserved, or heavily processed meats.
-        Includes hot dogs, sausage links, deli meats, and similar products.
+        Includes hot dogs, sausages, deli meats, and similar products.
       keywords:
         - hot dog
-        - sausage link
+        - sausage
         - pepperoni
         - salami
         - bologna

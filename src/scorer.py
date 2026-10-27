@@ -31,6 +31,11 @@ def _match_keywords(text: str, keywords: List[str]) -> bool:
     for kw in keywords:
         # Allow a trailing plural 's' so "lentil" matches "lentils"
         pattern = r"\b" + re.escape(kw) + r"s?\b"
+        # "sunflower seed oil" is frying oil, not sunflower seeds (and "fish oil"
+        # is not fish), so a match followed by "oil" only counts when the
+        # keyword is itself an oil ("olive oil").
+        if "oil" not in kw:
+            pattern += r"(?!\s+oil)"
         if re.search(pattern, text):
             return True
     return False
@@ -122,10 +127,15 @@ def build_deterministic_recommendation(scored: List[ScoredHall], date: str, meal
     best = halls_with_items[0]
     backup = halls_with_items[1] if len(halls_with_items) > 1 else best
 
-    recommended_plate = [it.name for it in best.top_items[:5]]
+    plate_items = best.top_items[:5]
+    recommended_plate = [it.name for it in plate_items]
     avoid = [it.name for it in best.avoid_items[:3]]
 
-    confidence = "high" if best.total_score > 10 else ("medium" if best.total_score > 3 else "low")
+    # Confidence reflects what you would actually eat, not the hall total: a
+    # breakfast line with oatmeal and fruit next to waffles and eggs is a fine
+    # pick even though the waffles drag the hall's sum below zero.
+    plate_score = sum(it.score for it in plate_items)
+    confidence = "high" if plate_score >= 12 else ("medium" if plate_score >= 6 else "low")
 
     top_tags = sorted(
         best.breakdown.get("positive_hits", {}).items(),
