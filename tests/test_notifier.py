@@ -174,3 +174,26 @@ def test_notify_sends_when_not_dry_run():
     with patch("src.notifier.send_telegram", return_value=True) as send:
         notify(make_rec(), dry_run=False)
         send.assert_called_once()
+
+
+# ------- 👍/👎 buttons -------
+
+from src.notifier import feedback_keyboard, parse_feedback_callback  # noqa: E402
+
+
+def test_recommendation_carries_feedback_buttons():
+    with patch.dict(os.environ, {"TELEGRAM_BOT_TOKEN": "123:ABC", "TELEGRAM_CHAT_ID": "42"}), \
+         patch("src.notifier.requests.post", return_value=fake_response(200, {"ok": True, "result": {}})) as post:
+        assert send_telegram(make_rec()) is True
+    buttons = post.call_args.kwargs["json"]["reply_markup"]["inline_keyboard"][0]
+    assert [b["callback_data"] for b in buttons] == ["fb:2026-09-25:Lunch:up", "fb:2026-09-25:Lunch:down"]
+
+
+def test_feedback_callback_round_trip():
+    for button in feedback_keyboard("2026-10-27", "Breakfast")["inline_keyboard"][0]:
+        assert len(button["callback_data"].encode()) <= 64
+        date_iso, meal, vote = parse_feedback_callback(button["callback_data"])
+        assert (date_iso, meal) == ("2026-10-27", "Breakfast")
+    assert parse_feedback_callback("fb:not-a-date:Lunch:up") is None
+    assert parse_feedback_callback("fb:2026-10-27:Lunch:meh") is None
+    assert parse_feedback_callback("something else") is None

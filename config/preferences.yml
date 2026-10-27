@@ -376,3 +376,14 @@ scoring:
         - fettuccine
         - ramen
         - instant noodle
+
+# How your 👍/👎 taps and recent picks nudge hall scores (src/feedback.py).
+# Both apply before the AI sees the scores and to the scoring-only fallback.
+# Lunch scores run roughly 20-45 and breakfast 0-15, so these settle close calls
+# rather than override the menu. Set a value to 0 to turn that nudge off.
+adjustments:
+  feedback_points_per_vote: 1.5   # per net 👍 (+) or 👎 (−) on picks where the hall was best
+  feedback_max_points: 4.5        # cap in either direction
+  feedback_days: 30               # only votes on meals this recent count
+  repeat_penalty: 3.0             # the hall was already the best pick for this meal...
+  repeat_streak_days: 2           # ...on each of this many previous days

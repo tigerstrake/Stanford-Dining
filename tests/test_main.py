@@ -105,3 +105,34 @@ def test_structural_scrape_failure_still_exits_1(cli):
         result, notify = cli("--meal", "lunch", stocked={"Lunch"})
     assert result.exit_code == 1
     notify.assert_not_called()
+
+
+# ------- hours-change alert -------
+
+from src.models import DiningHours, HallHours  # noqa: E402
+
+
+def _hours(breakfast):
+    halls = {f"h{i}": HallHours(hall_name=f"H{i}", weekday={"Breakfast": breakfast}) for i in range(5)}
+    return DiningHours(fetched_at="x", source_url="x", halls=halls)
+
+
+def test_hours_change_sends_one_alert(tmp_path):
+    runner = CliRunner()
+
+    def run(hours, *extra):
+        FakeScraper.stocked = {"Lunch"}
+        with patch("src.main.StanfordMenuScraper", FakeScraper), \
+             patch("src.main.load_dining_hours_safe", return_value=hours), \
+             patch("src.main.notify"), \
+             patch("src.main.send_alert") as alert:
+            result = runner.invoke(main, ["--no-ai", "--meal", "lunch", "--data-dir", str(tmp_path), *extra])
+        assert result.exit_code == 0, result.output
+        return alert
+
+    run(_hours("7:30 a.m. - 9:00 a.m.")).assert_not_called()                 # baseline
+    run(_hours("8:00 a.m. - 9:00 a.m."), "--dry-run").assert_not_called()   # dry run: log only
+    alert = run(_hours("8:00 a.m. - 9:00 a.m."))
+    alert.assert_called_once()
+    assert "Breakfast 8:00 AM" in alert.call_args.args[0]
+    run(_hours("8:00 a.m. - 9:00 a.m.")).assert_not_called()                 # only once

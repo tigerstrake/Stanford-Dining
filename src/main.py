@@ -1,22 +1,23 @@
 from __future__ import annotations
 
-import json
 import logging
 import os
 import sys
 from datetime import datetime, date, timezone
-from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 import pytz
 
+from .feedback import adjust_scores, prompt_feedback
 from .hours import load_dining_hours_safe
-from .models import ScrapeResult
-from .notifier import notify
+from .hours_watch import check_hours_change
+from .models import DiningHours, Recommendation, ScrapeResult
+from .notifier import notify, send_alert
 from .recommender import get_recommendation
 from .scorer import score_all_halls
 from .scraper import StanfordMenuScraper
+from .storage import hours_path, menus_path, recommendation_path, save_json
 
 logging.basicConfig(
     level=logging.INFO,
@@ -86,10 +87,100 @@ def _date_str_for_page(d: date) -> str:
     return f"{d.month}/{d.day}/{d.year}"
 
 
-def _save_json(path: Path, data: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, default=str))
-    logger.info("Saved: %s", path)
+class ScrapeFailure(RuntimeError):
+    """The menu site itself broke (layout changed, date missing), as opposed to
+    menus simply not being posted yet."""
+
+
+def scrape_menus(meal: str, target_date: date, fallback: bool, data_dir: str) -> Optional[ScrapeResult]:
+    """Scrape every hall for one meal and save it; None if nothing is posted.
+
+    With `fallback`, a meal with no items anywhere is retried as the nearest
+    alternative (MEAL_FALLBACKS). Raises ScrapeFailure on structural failure.
+    """
+    now_utc = datetime.now(timezone.utc)
+    date_str = _date_str_for_page(target_date)
+    scraper = StanfordMenuScraper()
+    candidates = [meal] + (MEAL_FALLBACKS.get(meal, []) if fallback else [])
+
+    halls = []
+    resolved_meal = meal
+    for candidate in candidates:
+        try:
+            halls = scraper.scrape_all(date_str=date_str, meal=candidate)
+        except RuntimeError as exc:
+            raise ScrapeFailure(f"Scraping failed: {exc}") from exc
+        if not halls:
+            raise ScrapeFailure("No dining halls found")
+        if any(h.items for h in halls):
+            if candidate != meal:
+                logger.warning(
+                    "No %s menus for %s — using %s instead", meal, date_str, candidate
+                )
+                resolved_meal = candidate
+            break
+        logger.warning("All halls returned empty menus for %s / %s", date_str, candidate)
+
+    halls_with_items = [h for h in halls if h.items]
+    warnings = []
+    if len(halls_with_items) == 0:
+        # Not an error: menus are simply not posted (holiday, break, or not
+        # yet published). Return cleanly so scheduled runs do not page anyone.
+        logger.warning(
+            "No menus posted for %s (%s) — nothing to recommend, skipping.",
+            date_str, "/".join(candidates),
+        )
+        return None
+    if len(halls_with_items) < 3:
+        msg = (
+            f"Only {len(halls_with_items)} hall(s) returned menu items — "
+            "scrape may be unreliable."
+        )
+        logger.warning(msg)
+        warnings.append(msg)
+
+    scrape = ScrapeResult(
+        date=target_date.isoformat(),
+        meal=resolved_meal,
+        halls=halls,
+        scraped_at=now_utc.isoformat(),
+        reliable=len(halls_with_items) >= 3,
+        warnings=warnings,
+    )
+    save_json(menus_path(data_dir, scrape.date, resolved_meal), scrape.model_dump())
+    return scrape
+
+
+def run_pipeline(
+    meal: str, target_date: date, *, fallback: bool, use_ai: bool, data_dir: str,
+) -> Optional[Tuple[Recommendation, Optional[DiningHours]]]:
+    """Scrape, score, recommend and fetch hours, saving each step under data_dir.
+
+    Returns (recommendation, hours), or None when no menus are posted. Raises
+    ScrapeFailure if the menu site is broken. Shared by the scheduled run and
+    the Telegram bot.
+    """
+    scrape = scrape_menus(meal, target_date, fallback, data_dir)
+    if scrape is None:
+        return None
+
+    # --- SCORE ---
+    scored = score_all_halls(scrape.halls)
+    scored = adjust_scores(scored, meal=scrape.meal, target_date=target_date, data_dir=data_dir)
+    logger.info(
+        "Scores: %s",
+        ", ".join(f"{s.hall_name}={s.total_score:.1f}" for s in scored[:5]),
+    )
+
+    # --- RECOMMEND ---
+    rec = get_recommendation(scrape, scored, use_ai=use_ai, feedback=prompt_feedback(data_dir))
+    save_json(recommendation_path(data_dir, scrape.date, scrape.meal), rec.model_dump())
+
+    # --- HOURS (best-effort; never blocks the message) ---
+    hours = load_dining_hours_safe()
+    if hours is not None:
+        save_json(hours_path(data_dir, scrape.date), hours.model_dump())
+    return rec, hours
 
 
 @click.command()
@@ -109,8 +200,7 @@ def main(meal: str, date_arg: Optional[str], no_ai: bool, dry_run: bool,
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    now_utc = datetime.now(timezone.utc)
-    now_la = now_utc.astimezone(LA_TZ)
+    now_la = datetime.now(timezone.utc).astimezone(LA_TZ)
 
     if date_arg and date_arg.lower() == "today":
         target_date = now_la.date()
@@ -125,89 +215,31 @@ def main(meal: str, date_arg: Optional[str], no_ai: bool, dry_run: bool,
         target_date = now_la.date()
 
     resolved_meal = _resolve_meal(meal, now_la)
-    date_str = _date_str_for_page(target_date)
-    date_iso = target_date.isoformat()
+    logger.info("Target: %s / %s / %s", target_date, resolved_meal, _date_str_for_page(target_date))
 
-    logger.info("Target: %s / %s / %s", target_date, resolved_meal, date_str)
-
-    # --- SCRAPE ---
-    scraper = StanfordMenuScraper()
-    candidates = [resolved_meal]
-    if meal == "auto":
-        candidates += MEAL_FALLBACKS.get(resolved_meal, [])
-
-    halls = []
-    for candidate in candidates:
-        try:
-            halls = scraper.scrape_all(date_str=date_str, meal=candidate)
-        except RuntimeError as exc:
-            # Structural failure (page changed, date missing): fail loudly.
-            logger.error("Scraping failed: %s", exc)
-            sys.exit(1)
-        if not halls:
-            logger.error("No dining halls found — failing loudly")
-            sys.exit(1)
-        if any(h.items for h in halls):
-            if candidate != resolved_meal:
-                logger.warning(
-                    "No %s menus for %s — using %s instead", resolved_meal, date_str, candidate
-                )
-                resolved_meal = candidate
-            break
-        logger.warning("All halls returned empty menus for %s / %s", date_str, candidate)
-
-    halls_with_items = [h for h in halls if h.items]
-    warnings = []
-    if len(halls_with_items) == 0:
-        # Not an error: menus are simply not posted (holiday, break, or not
-        # yet published). Exit cleanly so scheduled runs do not page anyone.
-        logger.warning(
-            "No menus posted for %s (%s) — nothing to recommend, skipping.",
-            date_str, "/".join(candidates),
+    try:
+        result = run_pipeline(
+            resolved_meal, target_date,
+            fallback=(meal == "auto"), use_ai=not no_ai, data_dir=data_dir,
         )
+    except ScrapeFailure as exc:
+        logger.error("%s — failing loudly", exc)
+        sys.exit(1)
+    if result is None:
         return
-    if len(halls_with_items) < 3:
-        msg = (
-            f"Only {len(halls_with_items)} hall(s) returned menu items — "
-            "scrape may be unreliable."
-        )
-        logger.warning(msg)
-        warnings.append(msg)
-
-    scrape = ScrapeResult(
-        date=date_iso,
-        meal=resolved_meal,
-        halls=halls,
-        scraped_at=now_utc.isoformat(),
-        reliable=len(halls_with_items) >= 3,
-        warnings=warnings,
-    )
-
-    # Save raw scrape
-    menu_path = Path(data_dir) / "menus" / date_iso / f"{resolved_meal.lower()}.json"
-    _save_json(menu_path, scrape.model_dump())
-
-    # --- SCORE ---
-    scored = score_all_halls(halls)
-    logger.info(
-        "Scores: %s",
-        ", ".join(f"{s.hall_name}={s.total_score:.1f}" for s in scored[:5]),
-    )
-
-    # --- RECOMMEND ---
-    rec = get_recommendation(scrape, scored, use_ai=not no_ai)
-
-    # Save recommendation
-    rec_path = Path(data_dir) / "recommendations" / date_iso / f"{resolved_meal.lower()}.json"
-    _save_json(rec_path, rec.model_dump())
-
-    # --- HOURS (best-effort; never blocks the message) ---
-    hours = load_dining_hours_safe()
-    if hours is not None:
-        _save_json(Path(data_dir) / "hours" / f"{date_iso}.json", hours.model_dump())
+    rec, hours = result
 
     # --- NOTIFY ---
     notify(rec, dry_run=dry_run, hours=hours)
+
+    # --- HOURS WATCH (the send times in the timer follow the current hours) ---
+    if hours is not None:
+        alert = check_hours_change(hours, data_dir, save=not dry_run)
+        if alert:
+            if dry_run:
+                logger.info("Dry-run: would send hours alert:\n%s", alert)
+            else:
+                send_alert(alert)
 
 
 if __name__ == "__main__":

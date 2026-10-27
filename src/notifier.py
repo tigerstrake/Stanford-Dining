@@ -4,7 +4,7 @@ import html
 import logging
 import os
 from datetime import date
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import requests
 
@@ -157,6 +157,98 @@ def _parse_chat_ids(raw: Optional[str]) -> List[str]:
     return [c.strip() for c in raw.split(",") if c.strip()]
 
 
+def allowed_chat_ids() -> List[str]:
+    """Chats the bot sends to and answers. Everyone else is ignored."""
+    return _parse_chat_ids(os.environ.get("TELEGRAM_CHAT_ID"))
+
+
+# ------- 👍/👎 buttons -------
+
+FEEDBACK_PREFIX = "fb"
+FEEDBACK_VOTES = {"up": "👍", "down": "👎"}
+
+
+def feedback_keyboard(date_iso: str, meal: str, selected: Optional[str] = None) -> dict:
+    """Inline 👍/👎 buttons under a recommendation; `selected` marks the vote cast."""
+    buttons = []
+    for vote, emoji in FEEDBACK_VOTES.items():
+        label = f"✓ {emoji}" if vote == selected else emoji
+        # callback_data is capped at 64 bytes; "fb:2026-10-27:Breakfast:down" is 28.
+        buttons.append({"text": label, "callback_data": f"{FEEDBACK_PREFIX}:{date_iso}:{meal}:{vote}"})
+    return {"inline_keyboard": [buttons]}
+
+
+def parse_feedback_callback(data: str) -> Optional[Tuple[str, str, str]]:
+    """(date_iso, meal, vote) from a feedback button's callback_data, else None."""
+    parts = (data or "").split(":")
+    if len(parts) != 4 or parts[0] != FEEDBACK_PREFIX or parts[3] not in FEEDBACK_VOTES:
+        return None
+    try:
+        date.fromisoformat(parts[1])
+    except ValueError:
+        return None
+    return parts[1], parts[2], parts[3]
+
+
+# ------- sending -------
+
+def call_api(
+    method: str,
+    params: dict,
+    bot_token: Optional[str] = None,
+    api_base: str = TELEGRAM_API_BASE,
+    timeout: int = 15,
+) -> Optional[dict]:
+    """POST one Bot API method; returns its "result", or None (logged) on failure.
+
+    Never raises and never logs the URL, which contains the bot token.
+    """
+    token = bot_token or os.environ.get("TELEGRAM_BOT_TOKEN")
+    if not token:
+        logger.warning("TELEGRAM_BOT_TOKEN not set — skipping Telegram %s", method)
+        return None
+    url = f"{api_base.rstrip('/')}/bot{token}/{method}"
+    try:
+        resp = requests.post(url, json=params, timeout=timeout)
+        body = {}
+        try:
+            body = resp.json()
+        except ValueError:
+            pass
+        # Telegram answers application errors (bad chat id, bad HTML) with
+        # HTTP 400 *and* {"ok": false, "description": ...}; check both.
+        if resp.status_code == 200 and body.get("ok"):
+            return body.get("result", {})
+        logger.error(
+            "Telegram rejected %s for chat %s: HTTP %s — %s",
+            method, params.get("chat_id"), resp.status_code,
+            body.get("description", resp.text[:200]),
+        )
+    except Exception as exc:
+        logger.error("Telegram %s failed for chat %s: %s", method, params.get("chat_id"), exc)
+    return None
+
+
+def send_message(
+    chat_id: str,
+    text: str,
+    reply_markup: Optional[dict] = None,
+    bot_token: Optional[str] = None,
+    api_base: str = TELEGRAM_API_BASE,
+    timeout: int = 15,
+) -> Optional[dict]:
+    """Send one HTML message; returns the sent Message, or None on failure."""
+    params = {
+        "chat_id": chat_id,
+        "text": _truncate(text),
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
+    }
+    if reply_markup:
+        params["reply_markup"] = reply_markup
+    return call_api("sendMessage", params, bot_token=bot_token, api_base=api_base, timeout=timeout)
+
+
 def send_telegram(
     rec: Recommendation,
     bot_token: Optional[str] = None,
@@ -172,7 +264,7 @@ def send_telegram(
     already gone to stdout by the time this is called.
     """
     token = bot_token or os.environ.get("TELEGRAM_BOT_TOKEN")
-    targets = chat_ids if chat_ids is not None else _parse_chat_ids(os.environ.get("TELEGRAM_CHAT_ID"))
+    targets = chat_ids if chat_ids is not None else allowed_chat_ids()
 
     if not token:
         logger.warning("TELEGRAM_BOT_TOKEN not set — skipping Telegram notification")
@@ -181,42 +273,21 @@ def send_telegram(
         logger.warning("TELEGRAM_CHAT_ID not set — skipping Telegram notification")
         return False
 
-    text = _truncate(format_recommendation_html(rec, hours))
-    url = f"{api_base.rstrip('/')}/bot{token}/sendMessage"
+    text = format_recommendation_html(rec, hours)
+    keyboard = feedback_keyboard(rec.date, rec.meal) if rec.best_hall != "None" else None
 
     delivered = 0
     for chat_id in targets:
-        try:
-            resp = requests.post(
-                url,
-                json={
-                    "chat_id": chat_id,
-                    "text": text,
-                    "parse_mode": "HTML",
-                    "disable_web_page_preview": True,
-                },
-                timeout=timeout,
-            )
-            body = {}
-            try:
-                body = resp.json()
-            except ValueError:
-                pass
-            # Telegram answers application errors (bad chat id, bad HTML) with
-            # HTTP 400 *and* {"ok": false, "description": ...}; check both.
-            if resp.status_code == 200 and body.get("ok"):
-                delivered += 1
-                logger.info("Telegram notification sent to chat %s", chat_id)
-            else:
-                logger.error(
-                    "Telegram rejected message for chat %s: HTTP %s — %s",
-                    chat_id, resp.status_code, body.get("description", resp.text[:200]),
-                )
-        except Exception as exc:
-            # Never log the URL: it contains the bot token.
-            logger.error("Telegram notification failed for chat %s: %s", chat_id, exc)
-
+        if send_message(chat_id, text, reply_markup=keyboard, bot_token=token,
+                        api_base=api_base, timeout=timeout) is not None:
+            delivered += 1
+            logger.info("Telegram notification sent to chat %s", chat_id)
     return delivered > 0
+
+
+def send_alert(text: str) -> bool:
+    """Send a short HTML notice (not a recommendation) to every allowed chat."""
+    return sum(send_message(c, text) is not None for c in allowed_chat_ids()) > 0
 
 
 def notify(rec: Recommendation, dry_run: bool = False, hours: Optional[DiningHours] = None) -> None:

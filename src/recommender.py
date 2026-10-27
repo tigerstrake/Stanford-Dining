@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import os
-from typing import List
+from typing import List, Optional
 
 from .models import Recommendation, ScoredHall, ScrapeResult
 from .preferences import load as load_prefs
@@ -37,6 +37,10 @@ Hard avoids (never recommend these even as secondary options): {hard_avoid_str}
 You will receive JSON with pre-scored dining hall menus. The scores already reflect the \
 preferences above. Use them as a strong signal but apply your own judgement too.
 
+If the JSON includes recent_feedback, it lists the user's thumbs up/down on recent picks, \
+with the hall and plate that was recommended. Lean toward dishes and halls they liked and \
+away from ones they disliked, but never against the rules above.
+
 Return a concise recommendation as JSON with exactly these keys:
 - best_hall: string
 - backup_hall: string
@@ -48,7 +52,8 @@ Return a concise recommendation as JSON with exactly these keys:
 Only return valid JSON. No markdown. No explanations outside the JSON."""
 
 
-def _build_ai_payload(scrape: ScrapeResult, scored: List[ScoredHall]) -> str:
+def _build_ai_payload(scrape: ScrapeResult, scored: List[ScoredHall],
+                      feedback: Optional[List[dict]] = None) -> str:
     menu_map = {m.hall_id: m for m in scrape.halls}
     halls_summary = []
     for hall in scored:
@@ -67,15 +72,16 @@ def _build_ai_payload(scrape: ScrapeResult, scored: List[ScoredHall]) -> str:
             "avoid_items": [it.name for it in hall.avoid_items[:4]],
             "all_items": items_list,
         })
-    return json.dumps(
-        {"date": scrape.date, "meal": scrape.meal, "halls": halls_summary},
-        indent=2,
-    )
+    payload = {"date": scrape.date, "meal": scrape.meal, "halls": halls_summary}
+    if feedback:
+        payload["recent_feedback"] = feedback
+    return json.dumps(payload, indent=2)
 
 
 def generate_ai_recommendation(
     scrape: ScrapeResult,
     scored: List[ScoredHall],
+    feedback: Optional[List[dict]] = None,
 ) -> Recommendation:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
@@ -88,7 +94,7 @@ def generate_ai_recommendation(
 
     client = OpenAI(api_key=api_key)
     system_prompt = _build_system_prompt()
-    payload = _build_ai_payload(scrape, scored)
+    payload = _build_ai_payload(scrape, scored, feedback)
 
     logger.info("Calling OpenAI API (payload: %d chars)", len(payload))
     response = client.chat.completions.create(
@@ -130,10 +136,11 @@ def get_recommendation(
     scrape: ScrapeResult,
     scored: List[ScoredHall],
     use_ai: bool = True,
+    feedback: Optional[List[dict]] = None,
 ) -> Recommendation:
     if use_ai:
         try:
-            return generate_ai_recommendation(scrape, scored)
+            return generate_ai_recommendation(scrape, scored, feedback)
         except Exception as exc:
             logger.warning("AI recommendation failed (%s), falling back to scoring", exc)
 
