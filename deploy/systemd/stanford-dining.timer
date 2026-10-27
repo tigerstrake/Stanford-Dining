@@ -1,10 +1,21 @@
 [Unit]
-Description=Stanford dining recommender at 8 AM, 11 AM and 4 PM Pacific
+Description=Stanford dining recommender, 30 min before each meal opens (Pacific)
 
 [Timer]
+# Each run lands 30 minutes before the earliest hall opens for that meal, per
+# the Fall hours (rde.stanford.edu dining-locations-hours). Revisit when the
+# quarter's hours change.
+#   Weekdays: breakfast opens 7:30, lunch 11:00, dinner 5:00
+#   Weekends: brunch/lunch opens 9:30 (Arrillaga, Lakeside), dinner 5:00
+# Weekends get a single daytime run. `--meal auto` maps any weekend hour before
+# 15:00 to Lunch, so separate morning and midday runs would send the same lunch
+# pick twice.
+OnCalendar=Mon..Fri 07:00 America/Los_Angeles
+OnCalendar=Mon..Fri 10:30 America/Los_Angeles
+OnCalendar=Sat,Sun 09:00 America/Los_Angeles
+OnCalendar=*-*-* 16:30 America/Los_Angeles
 # systemd applies the zone itself, so DST needs neither the doubled UTC cron
 # lines nor the meal-window guard the GitHub workflow used.
-OnCalendar=*-*-* 08,11,16:00:00 America/Los_Angeles
 # Deliberately not Persistent=: a run missed while the box was down is
 # skipped rather than sent hours late.
 

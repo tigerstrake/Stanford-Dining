@@ -112,8 +112,16 @@ Tests cover:
 ## Running on a server (systemd)
 
 Scheduled runs happen on a home Ubuntu server (the doorboard NUC) under a
-systemd **user** timer: 8 AM, 11 AM and 4 PM `America/Los_Angeles`, with DST
-handled by systemd. Every run pulls `main` and re-installs requirements first,
+systemd **user** timer. Each message goes out 30 minutes before the earliest
+hall opens for that meal, in `America/Los_Angeles` with DST handled by systemd:
+
+| | Breakfast | Lunch | Dinner |
+|---|---|---|---|
+| Mon–Fri | 7:00 AM | 10:30 AM | 4:30 PM |
+| Sat–Sun | — | 9:00 AM (brunch/lunch) | 4:30 PM |
+
+The times follow the current quarter's dining hours (see the comments in
+`deploy/systemd/stanford-dining.timer`). Every run pulls `main` and re-installs requirements first,
 so a push here is picked up at the next run. If a run exits non-zero,
 `stanford-dining-failed.service` sends a short "run failed" message to the same
 Telegram chat.
