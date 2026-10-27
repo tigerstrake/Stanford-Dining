@@ -1,0 +1,7 @@
+[Unit]
+Description=Tell Telegram that a stanford-dining run failed
+
+[Service]
+Type=oneshot
+EnvironmentFile=%h/dev/Stanford-Dining/.env
+ExecStart=/bin/bash %h/dev/Stanford-Dining/deploy/notify-failure.sh

@@ -109,6 +109,46 @@ Tests cover:
 - Deterministic recommendation logic
 - Edge cases (empty menus, malformed HTML)
 
+## Running on a server (systemd)
+
+The scheduled runs happen on a home Ubuntu server (the doorboard NUC) under a
+systemd **user** timer: 8 AM, 11 AM and 4 PM `America/Los_Angeles`, with DST
+handled by systemd. Every run pulls `main` and re-installs requirements first,
+so a push here is picked up at the next run. If a run exits non-zero,
+`stanford-dining-failed.service` sends a short "run failed" message to the same
+Telegram chat.
+
+| File | Purpose |
+|------|---------|
+| `deploy/systemd/stanford-dining.service` | One run: `git pull`, `pip install`, `python -m src.main --meal auto` |
+| `deploy/systemd/stanford-dining.timer` | The schedule |
+| `deploy/systemd/stanford-dining-failed.service` | `OnFailure=` hook that runs `deploy/notify-failure.sh` |
+
+The units expect the checkout at `~/dev/Stanford-Dining` with a `.venv` and a
+`.env` (same keys as `.env.example`; systemd reads it via `EnvironmentFile=`).
+
+```bash
+git clone https://github.com/tigerstrake/Stanford-Dining.git ~/dev/Stanford-Dining
+cd ~/dev/Stanford-Dining
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+cp .env.example .env && chmod 600 .env    # then fill it in
+mkdir -p ~/.config/systemd/user && cp deploy/systemd/* ~/.config/systemd/user/
+sudo loginctl enable-linger "$USER"       # run user timers without a login session
+systemctl --user daemon-reload
+systemctl --user enable --now stanford-dining.timer
+```
+
+`git pull` does not reinstall the units. After changing anything in
+`deploy/systemd/`, copy them again and run `systemctl --user daemon-reload`.
+
+Day-to-day:
+
+```bash
+systemctl --user list-timers stanford-dining.timer   # next run
+systemctl --user start stanford-dining.service       # run now (sends to Telegram)
+journalctl --user -u stanford-dining -n 50           # logs of recent runs
+```
+
 ## GitHub Actions
 
 The workflow runs automatically:

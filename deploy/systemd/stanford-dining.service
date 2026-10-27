@@ -1,0 +1,15 @@
+[Unit]
+Description=Stanford dining recommender (one run)
+OnFailure=stanford-dining-failed.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/dev/Stanford-Dining
+EnvironmentFile=%h/dev/Stanford-Dining/.env
+# Run whatever is on main, as the GitHub Actions job did. Both steps are
+# best-effort ("-"): if GitHub or PyPI is unreachable, the code already
+# checked out still runs.
+ExecStartPre=-/usr/bin/git pull --ff-only --quiet
+ExecStartPre=-%h/dev/Stanford-Dining/.venv/bin/pip install --quiet --disable-pip-version-check -r requirements.txt
+ExecStart=%h/dev/Stanford-Dining/.venv/bin/python -m src.main --meal auto
+TimeoutStartSec=15min
