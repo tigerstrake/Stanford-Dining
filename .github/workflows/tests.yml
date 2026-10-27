@@ -1,0 +1,27 @@
+name: Tests
+
+# The server deploys whatever is on main at its next run (deploy/update.sh),
+# so a push that breaks the tests should show up here first.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        # 3.14 is what the NUC runs.
+        python-version: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+      - run: pip install -r requirements.txt
+      - run: python -m pytest tests/ -q

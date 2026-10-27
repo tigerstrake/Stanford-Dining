@@ -278,8 +278,10 @@ stanford-dining-recommender/
 │   └── test_scraper.py
 ├── data/                 # Output JSON (gitignored)
 ├── .github/workflows/
-│   └── dining-recommender.yml
-├── requirements.txt
+│   ├── dining-recommender.yml   # Manual runs
+│   └── tests.yml                # pytest on every push
+├── requirements.in       # Direct dependencies (edit this)
+├── requirements.txt      # Pinned lock compiled from requirements.in
 ├── .env.example
 └── README.md
 ```

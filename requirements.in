@@ -1,0 +1,14 @@
+# Direct dependencies with minimum versions. requirements.txt is the pinned
+# lock generated from this file; regenerate it after editing:
+#   uv pip compile --universal --python-version 3.12 requirements.in -o requirements.txt
+
+requests>=2.32.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+pydantic>=2.7.0
+openai>=1.35.0
+python-dateutil>=2.9.0
+pytz>=2024.1
+click>=8.1.0
+pyyaml>=6.0.0
+pytest>=8.0.0
